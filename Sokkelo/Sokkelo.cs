@@ -18,6 +18,8 @@ public class Sokkelo : PhysicsGame
     PhysicsObject alaReuna;
     PhysicsObject virus;
     PhysicsObject virus2;
+    IntMeter ElamaLaskuri;
+
     public override void Begin()
     {
         LuoKentta();
@@ -25,9 +27,11 @@ public class Sokkelo : PhysicsGame
         PolkuaivoVirus();
         LisaaOhjaimet();
 
+
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
+
     void LuoKentta()
     {
         Camera.ZoomToLevel();
@@ -56,6 +60,7 @@ public class Sokkelo : PhysicsGame
         virus.Y = 0.0;
         virus.Color = Color.Red;
         virus.Restitution = 1.0;
+
         Add(virus);
 
         //Kentän yhden "ruudun" koko, käytä samaa lukua kuin jos kenttä luotu esimerkiksi ColorTileMapilla.
@@ -70,19 +75,21 @@ public class Sokkelo : PhysicsGame
     void PolkuaivoVirus()
     {
         virus2 = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
-        virus2.X = -250.0;
-        virus2.Y = -50.0;
+        virus2.X = -350.0;
+        virus2.Y = -350.0;
         virus2.Color = Color.Green;
         virus2.Restitution = 1.0;
+
         Add(virus2);
 
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
         List<Vector> polku = new List<Vector>();
-        polku.Add(new Vector(250, 0));
-        polku.Add(new Vector(0, 150));
-        polku.Add(new Vector(-250, 0));
-        polku.Add(new Vector(0, -150));
+
+        polku.Add(new Vector(-350, -350));
+        polku.Add(new Vector(0, 0));
+        polku.Add(new Vector(350, 350));
+
 
         polkuAivot.Path = polku;
 
