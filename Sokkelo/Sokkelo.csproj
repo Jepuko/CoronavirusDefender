@@ -12,5 +12,20 @@
         <PackageReference Include="Jypeli.Physics2d.Core" Version="1.5.*" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Content\korona.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\seina_1024x200.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\taustakuva.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\turret1.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
 

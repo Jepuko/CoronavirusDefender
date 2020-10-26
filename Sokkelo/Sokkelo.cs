@@ -35,7 +35,8 @@ public class Sokkelo : PhysicsGame
     void LuoKentta()
     {
         Camera.ZoomToLevel();
-        Level.BackgroundColor = Color.Black;
+        Image taustaKuva = LoadImage("taustakuva");
+        Level.Background.Image = taustaKuva;
 
         vasenReuna = Level.CreateLeftBorder();
         vasenReuna.Restitution = 1.0;
@@ -74,10 +75,11 @@ public class Sokkelo : PhysicsGame
     }
     void PolkuaivoVirus()
     {
-        virus2 = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
+        virus2 = new PhysicsObject(2 * 25.0, 2 * 25.0, Shape.Circle);
         virus2.X = -350.0;
         virus2.Y = -350.0;
-        virus2.Color = Color.Green;
+        Image viruksenKuva = LoadImage("korona");
+        virus2.Image = viruksenKuva;
         virus2.Restitution = 1.0;
 
         Add(virus2);
