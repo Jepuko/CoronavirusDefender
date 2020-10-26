@@ -25,7 +25,6 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         LuoVirus();
         PolkuaivoVirus();
-        LisaaOhjaimet();
         Taso1();
 
 
@@ -120,20 +119,6 @@ public class Sokkelo : PhysicsGame
 
         return polku;
     }
-
-
-    public void LisaaOhjaimet()
-    {
-        Keyboard.Listen(Key.Escape, ButtonState.Pressed, Exit, "Poistu");
-        Keyboard.Listen(Key.F1, ButtonState.Pressed,
-                        ShowControlHelp, "Näytä näppäinohjeet");
-
-        Keyboard.Listen(Key.Up, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta ylöspäin", virus, new Vector(0, 1000));
-        Keyboard.Listen(Key.Right, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta oikealle", virus, new Vector(1000, 0));
-        Keyboard.Listen(Key.Left, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta vasemmalle", virus, new Vector(-1000, 0));
-        Keyboard.Listen(Key.Down, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta alaspäin", virus, new Vector(0, -1000));
-    }
-
 
     private void LiikutaVirusta(PhysicsObject virus, Vector suunta)
     {
