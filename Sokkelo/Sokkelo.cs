@@ -32,7 +32,7 @@ public class Sokkelo : PhysicsGame
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
 
-    void LuoKentta()
+    public void LuoKentta()
     {
         Camera.ZoomToLevel();
         Image taustaKuva = LoadImage("taustakuva");
@@ -54,7 +54,9 @@ public class Sokkelo : PhysicsGame
         alaReuna.Restitution = 1.0;
         alaReuna.IsVisible = false;
     }
-    void LuoVirus()
+
+
+    public void LuoVirus()
     {
         virus = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
         virus.X = 0.0;
@@ -73,7 +75,9 @@ public class Sokkelo : PhysicsGame
 
         virus.Brain = labyrinttiAivot;
     }
-    void PolkuaivoVirus()
+
+
+    public void PolkuaivoVirus()
     {
         virus2 = new PhysicsObject(2 * 50.0, 2 * 50.0, Shape.Circle);
         virus2.X = -350.0;
@@ -101,7 +105,9 @@ public class Sokkelo : PhysicsGame
 
         virus2.Brain = polkuAivot;
     }
-    void LisaaOhjaimet()
+
+
+    public void LisaaOhjaimet()
     {
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, Exit, "Poistu");
         Keyboard.Listen(Key.F1, ButtonState.Pressed,
@@ -112,6 +118,8 @@ public class Sokkelo : PhysicsGame
         Keyboard.Listen(Key.Left, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta vasemmalle", virus, new Vector(-1000, 0));
         Keyboard.Listen(Key.Down, ButtonState.Pressed, LiikutaVirusta, "Lyö virusta alaspäin", virus, new Vector(0, -1000));
     }
+
+
     private void LiikutaVirusta(PhysicsObject virus, Vector suunta)
     {
         virus.Hit(suunta);
