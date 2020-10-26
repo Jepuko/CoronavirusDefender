@@ -26,6 +26,7 @@ public class Sokkelo : PhysicsGame
         LuoVirus();
         PolkuaivoVirus();
         LisaaOhjaimet();
+        Taso1();
 
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
@@ -80,8 +81,8 @@ public class Sokkelo : PhysicsGame
     public void PolkuaivoVirus()
     {
         virus2 = new PhysicsObject(2 * 22.0, 2 * 22.0, Shape.Circle);
-        virus2.X = -350.0;
-        virus2.Y = -350.0;
+        virus2.X = -450.0;
+        virus2.Y = 0.0;
         Image viruksenKuva = LoadImage("korona");
         virus2.Image = viruksenKuva;
         virus2.Restitution = 1.0;
@@ -90,13 +91,6 @@ public class Sokkelo : PhysicsGame
 
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
-        List<Vector> polku = new List<Vector>();
-
-        polku.Add(new Vector(-350, -350));
-        polku.Add(new Vector(0, 0));
-        polku.Add(new Vector(350, 350));
-
-
         polkuAivot.Path = polku;
 
         polkuAivot.Loop = true;
@@ -104,6 +98,27 @@ public class Sokkelo : PhysicsGame
         polkuAivot.Speed = 100;
 
         virus2.Brain = polkuAivot;
+    }
+
+    /// <summary>
+    /// Pelin ensimmäinen taso.
+    /// </summary>
+    public void Taso1()
+    {
+        List<Vector> polku = new List<Vector>();
+
+        polku.Add(new Vector(-100, 0));
+        polku.Add(new Vector(-100, 200));
+        polku.Add(new Vector(100, 200));
+        polku.Add(new Vector(100, -250));
+        polku.Add(new Vector(500, -250));
+
+        if (virus2 == polku(500, -250))
+        {
+            virus2.Destroy();
+        }
+
+        return polku;
     }
 
 
