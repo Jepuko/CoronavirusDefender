@@ -79,7 +79,7 @@ public class Sokkelo : PhysicsGame
 
     public void PolkuaivoVirus()
     {
-        virus2 = new PhysicsObject(2 * 50.0, 2 * 50.0, Shape.Circle);
+        virus2 = new PhysicsObject(2 * 22.0, 2 * 22.0, Shape.Circle);
         virus2.X = -350.0;
         virus2.Y = -350.0;
         Image viruksenKuva = LoadImage("korona");
