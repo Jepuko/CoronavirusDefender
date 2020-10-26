@@ -120,8 +120,4 @@ public class Sokkelo : PhysicsGame
         return polku;
     }
 
-    private void LiikutaVirusta(PhysicsObject virus, Vector suunta)
-    {
-        virus.Hit(suunta);
-    }
 }
