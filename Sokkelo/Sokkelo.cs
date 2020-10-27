@@ -7,6 +7,7 @@ using Jypeli.Widgets;
 
 /// @author Jesse Korolainen & Teemu Nieminen
 /// @version 18.10.2020
+/// @version 27.10.2020 Muokattu Taso1 vektorit. Arvon palautus ei toimi. Lisätty virukselle tuhoutumispiste oikeaan seinään ja testattu.
 /// <summary>
 /// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
 /// </summary>
@@ -25,8 +26,7 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         LuoVirus();
         PolkuaivoVirus();
-        Taso1();
-
+        LuoPortti();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -76,6 +76,20 @@ public class Sokkelo : PhysicsGame
         virus.Brain = labyrinttiAivot;
     }
 
+    /// <summary>
+    /// Testimielessä tehty objekti, jota vasten voidaan koittaa saada virus tuhoutumaan.
+    /// </summary>
+    public static PhysicsObject LuoPortti()
+    {
+        PhysicsObject portti = new PhysicsObject(500, 200, Shape.Rectangle);
+        Image portinKuva = LoadImage("turret1");
+        portti.Image = portinKuva;
+        portti.X = 500;
+        portti.Y = -250;
+
+        return portti;
+    }
+
 
     public void PolkuaivoVirus()
     {
@@ -85,8 +99,15 @@ public class Sokkelo : PhysicsGame
         Image viruksenKuva = LoadImage("korona");
         virus2.Image = viruksenKuva;
         virus2.Restitution = 1.0;
-
         Add(virus2);
+
+        Vector[] polku = {
+        new Vector(-100, 0),
+        new Vector(-100, 200),
+        new Vector(100, 200),
+        new Vector(100, -250),
+        new Vector(500, -250),
+        };
 
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
@@ -94,30 +115,34 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Loop = true;
 
-        polkuAivot.Speed = 100;
+        polkuAivot.Speed = 400;
 
         virus2.Brain = polkuAivot;
-    }
 
-    /// <summary>
-    /// Pelin ensimmäinen taso.
-    /// </summary>
-    public void Taso1()
-    {
-        List<Vector> polku = new List<Vector>();
-
-        polku.Add(new Vector(-100, 0));
-        polku.Add(new Vector(-100, 200));
-        polku.Add(new Vector(100, 200));
-        polku.Add(new Vector(100, -250));
-        polku.Add(new Vector(500, -250));
-
-        if (virus2 == polku(500, -250))
+        if (virus2 == oikeaReuna)
         {
             virus2.Destroy();
         }
 
-        return polku;
     }
+
+
+    /// <summary>
+    /// Pelin ensimmäinen taso.
+    /// </summary>
+    public static Vector Taso1()
+    {
+        Vector[] polku = {
+        new Vector(-100, 0),
+        new Vector(-100, 200),
+        new Vector(100, 200),
+        new Vector(100, -250),
+        new Vector(500, -250),
+        };
+
+        return polku;
+
+    }
+
 
 }
