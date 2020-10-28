@@ -23,7 +23,7 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         // LuoVirus(); PathWandererBrain
         PolkuaivoVirus();
-        LuoTykkitorni();
+        // LuoTykkitorni();
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += PolkuaivoVirus;
@@ -84,18 +84,25 @@ public class Sokkelo : PhysicsGame
     /// <summary>
     /// Tykkitorni, joka tuhoaa viruksia. Aseena AssaultRifle, jossa loppumattomat ammukset.
     /// </summary>
-    public void LuoTykkitorni()
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
+    /// <param name="ase"></param>
+    /// <returns></returns>
+    public Torni LuoTykkitorni(double leveys, double korkeus, AssaultRifle ase)
     {
-        FollowerBrain torni = new FollowerBrain(10, 10, Shape.Rectangle);
-        torni.Speed = 0;
-        torni.DistanceClose = 50;
-        torni.DistanceFar = 500;
-        torni.TargetClose += delegate { AmmuTykkitornilla(Virus, torninAse); };
-        Add(torni);
+
+        Torni tykkitorni = new Torni(leveys, korkeus, ase);
+        tykkitorni.Shape = Shape.Circle;
+        tykkitorni.X = 0.0;
+        tykkitorni.Y = 100.0;
+        tykkitorni.Image = LoadImage("turret1");
 
 
-        torni.X = 0.0;
-        torni.Y = 100.0;
+        FollowerBrain torninAivot = new FollowerBrain(10, 10, Shape.Rectangle);
+        torninAivot.Speed = 0;
+        torninAivot.DistanceClose = 50;
+        torninAivot.DistanceFar = 500;
+        torninAivot.TargetClose += delegate { TorniAmpuu(virus, torninAse); };
 
         torninAse = new AssaultRifle(50, 100);
         torninAse.ProjectileCollision = AmmusOsui;
@@ -107,7 +114,14 @@ public class Sokkelo : PhysicsGame
         torninAse.AmmoIgnoresExplosions = true;
         Image torninKuva = LoadImage("turret1");
         torninAse.Image = torninKuva;
-        torni.Add(torninAse);
+        
+        tykkitorni.Add(torninAse);
+
+        tykkitorni.Brain = torninAivot;
+
+        Add(tykkitorni);
+
+        return tykkitorni;
     }
 
 
@@ -117,13 +131,13 @@ public class Sokkelo : PhysicsGame
     /// <param name="torni"></param>
     /// <param name="ase"></param>
 
-    public void TykkitorninLahella(FollowerBrain torni, AssaultRifle ase)
+    public void TykkitorninLahella(PhysicsObject tykkitorni, AssaultRifle torninAse)
     {
-        torni.Angle = (virus2.Position - torni.Position).Angle;
-        TorniAmpuu(torni, torninAse);
+        tykkitorni.Angle = (virus.Position - tykkitorni.Position).Angle;
+        TorniAmpuu(tykkitorni, torninAse);
     }
 
-    public void TorniAmpuu(FollowerBrain torni, AssaultRifle ase)
+    public void TorniAmpuu(PhysicsObject tykkitorni, AssaultRifle ase)
     {
         PhysicsObject ammus = torninAse.Shoot();
     }
@@ -131,13 +145,13 @@ public class Sokkelo : PhysicsGame
 
     public void PolkuaivoVirus()
     {
-        Virus virus2 = new Virus(2 * 22.0, 2 * 22.0, 5);
-        virus2.X = -450.0;
-        virus2.Y = 0.0;
+        Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
+        virus.X = -450.0;
+        virus.Y = 0.0;
         Image viruksenKuva = LoadImage("korona");
-        virus2.Image = viruksenKuva;
-        virus2.Restitution = 1.0;
-        Add(virus2);
+        virus.Image = viruksenKuva;
+        virus.Restitution = 1.0;
+        Add(virus);
 
         Vector[] polku = {
         new Vector(-100, 0),
@@ -155,11 +169,11 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Speed = 100;
 
-        virus2.Brain = polkuAivot;
+        virus.Brain = polkuAivot;
 
-        AddCollisionHandler(virus2, VirusTormasi);
+        AddCollisionHandler(virus, VirusTormasi);
 
-        AddCollisionHandler(virus2, AmmusOsui);
+        AddCollisionHandler(virus, AmmusOsui);
 
     }
 
@@ -194,7 +208,7 @@ public class Sokkelo : PhysicsGame
     }
 }
 
-class Virus : PhysicsObject
+public class Virus : PhysicsObject
 {
     public int Elamat { get; set; }
 
@@ -202,6 +216,7 @@ class Virus : PhysicsObject
         : base(leveys, korkeus)
     {
         Elamat = elamia;
+
     }
 }
 
