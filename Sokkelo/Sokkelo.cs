@@ -15,17 +15,21 @@ public class Sokkelo : PhysicsGame
 {
     private PhysicsObject oikeaReuna;
     // IntMeter ElamaLaskuri;
+    // private Vector[] Taso1;
+    AssaultRifle torninAse;
 
     public override void Begin()
     {
         LuoKentta();
-        LuoVirus();
+        // LuoVirus(); PathWandererBrain
         PolkuaivoVirus();
+        LuoTykkitorni();
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += PolkuaivoVirus;
         ajastin.Start();
-        LuoPortti();
+        
+        // LuoTaso1();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -54,7 +58,7 @@ public class Sokkelo : PhysicsGame
         alaReuna.IsVisible = false;
     }
 
-
+    /*
     public void LuoVirus()
     {
         PhysicsObject virus = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
@@ -74,19 +78,54 @@ public class Sokkelo : PhysicsGame
 
         virus.Brain = labyrinttiAivot;
     }
+    */
+
 
     /// <summary>
-    /// Testimielessä tehty objekti, jota vasten voidaan koittaa saada virus tuhoutumaan.
+    /// Tykkitorni, joka tuhoaa viruksia. Aseena AssaultRifle, jossa loppumattomat ammukset.
     /// </summary>
-    public static PhysicsObject LuoPortti()
+    public void LuoTykkitorni()
     {
-        PhysicsObject portti = new PhysicsObject(500, 200, Shape.Rectangle);
-        Image portinKuva = LoadImage("turret1");
-        portti.Image = portinKuva;
-        portti.X = 500;
-        portti.Y = -250;
+        FollowerBrain torni = new FollowerBrain(10, 10, Shape.Rectangle);
+        torni.Speed = 0;
+        torni.DistanceClose = 50;
+        torni.DistanceFar = 500;
+        torni.TargetClose += delegate { AmmuTykkitornilla(Virus, torninAse); };
+        Add(torni);
 
-        return portti;
+
+        torni.X = 0.0;
+        torni.Y = 100.0;
+
+        torninAse = new AssaultRifle(50, 100);
+        torninAse.ProjectileCollision = AmmusOsui;
+        torninAse.InfiniteAmmo = true;
+        torninAse.Power.DefaultValue = 1;
+        torninAse.FireRate = 5.0;
+        torninAse.AmmoIgnoresGravity = true;
+        torninAse.CanHitOwner = false;
+        torninAse.AmmoIgnoresExplosions = true;
+        Image torninKuva = LoadImage("turret1");
+        torninAse.Image = torninKuva;
+        torni.Add(torninAse);
+    }
+
+
+    /// <summary>
+    /// Mitä tapahtuu kun virus tulee tarpeeksi lähelle tornia.
+    /// </summary>
+    /// <param name="torni"></param>
+    /// <param name="ase"></param>
+
+    public void TykkitorninLahella(FollowerBrain torni, AssaultRifle ase)
+    {
+        torni.Angle = (virus2.Position - torni.Position).Angle;
+        TorniAmpuu(torni, torninAse);
+    }
+
+    public void TorniAmpuu(FollowerBrain torni, AssaultRifle ase)
+    {
+        PhysicsObject ammus = torninAse.Shoot();
     }
 
 
@@ -114,32 +153,34 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Loop = true;
 
-        polkuAivot.Speed = 400;
+        polkuAivot.Speed = 100;
 
         virus2.Brain = polkuAivot;
 
         AddCollisionHandler(virus2, VirusTormasi);
 
+        AddCollisionHandler(virus2, AmmusOsui);
+
     }
 
-
+    /*
     /// <summary>
     /// Pelin ensimmäinen taso.
     /// </summary>
-    public static Vector[] Taso1()
+    public void LuoTaso1()
     {
-        Vector[] polku = {
-        new Vector(-100, 0),
-        new Vector(-100, 200),
-        new Vector(100, 200),
-        new Vector(100, -250),
-        new Vector(500, -250),
+        Taso1 = new Vector[] polku;
+        
+        polku= {
+        new Vector(-100, 0);
+        new Vector(-100, 200);
+        new Vector(100, 200);
+        new Vector(100, -250);
+        new Vector(500, -250);
         };
 
-        return polku;
-
     }
-
+    */
 
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
@@ -147,6 +188,10 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    public void AmmusOsui(PhysicsObject virus, PhysicsObject ammus)
+    {
+        if (ammus == virus) virus.Destroy();
+    }
 }
 
 class Virus : PhysicsObject
@@ -157,5 +202,19 @@ class Virus : PhysicsObject
         : base(leveys, korkeus)
     {
         Elamat = elamia;
+    }
+}
+
+
+/// <summary>
+/// Tykkitornin tiedot muille aliohjelmille.
+/// </summary>
+public class Torni : PhysicsObject
+{
+    public AssaultRifle torninAse;
+    public Torni(double leveys, double korkeus, AssaultRifle ase)
+        : base(leveys, korkeus)
+    {
+        torninAse = ase;
     }
 }
