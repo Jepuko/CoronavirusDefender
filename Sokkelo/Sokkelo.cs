@@ -13,19 +13,18 @@ using Jypeli.Widgets;
 /// </summary>
 public class Sokkelo : PhysicsGame
 {
-    PhysicsObject vasenReuna;
-    PhysicsObject oikeaReuna;
-    PhysicsObject ylaReuna;
-    PhysicsObject alaReuna;
-    PhysicsObject virus;
-    PhysicsObject virus2;
-    IntMeter ElamaLaskuri;
+    private PhysicsObject oikeaReuna;
+    // IntMeter ElamaLaskuri;
 
     public override void Begin()
     {
         LuoKentta();
         LuoVirus();
         PolkuaivoVirus();
+        Timer ajastin = new Timer();
+        ajastin.Interval = 1.5;
+        ajastin.Timeout += PolkuaivoVirus;
+        ajastin.Start();
         LuoPortti();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
@@ -38,7 +37,7 @@ public class Sokkelo : PhysicsGame
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
 
-        vasenReuna = Level.CreateLeftBorder();
+        PhysicsObject vasenReuna = Level.CreateLeftBorder();
         vasenReuna.Restitution = 1.0;
         vasenReuna.IsVisible = false;
 
@@ -46,11 +45,11 @@ public class Sokkelo : PhysicsGame
         oikeaReuna.Restitution = 1.0;
         oikeaReuna.IsVisible = false;
 
-        ylaReuna = Level.CreateTopBorder();
+        PhysicsObject ylaReuna = Level.CreateTopBorder();
         ylaReuna.Restitution = 1.0;
         ylaReuna.IsVisible = false;
 
-        alaReuna = Level.CreateBottomBorder();
+        PhysicsObject alaReuna = Level.CreateBottomBorder();
         alaReuna.Restitution = 1.0;
         alaReuna.IsVisible = false;
     }
@@ -58,7 +57,7 @@ public class Sokkelo : PhysicsGame
 
     public void LuoVirus()
     {
-        virus = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
+        PhysicsObject virus = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
         virus.X = 0.0;
         virus.Y = 0.0;
         virus.Color = Color.Red;
@@ -93,7 +92,7 @@ public class Sokkelo : PhysicsGame
 
     public void PolkuaivoVirus()
     {
-        virus2 = new PhysicsObject(2 * 22.0, 2 * 22.0, Shape.Circle);
+        Virus virus2 = new Virus(2 * 22.0, 2 * 22.0, 5);
         virus2.X = -450.0;
         virus2.Y = 0.0;
         Image viruksenKuva = LoadImage("korona");
@@ -119,10 +118,7 @@ public class Sokkelo : PhysicsGame
 
         virus2.Brain = polkuAivot;
 
-        if (virus2 == oikeaReuna)
-        {
-            virus2.Destroy();
-        }
+        AddCollisionHandler(virus2, VirusTormasi);
 
     }
 
@@ -130,7 +126,7 @@ public class Sokkelo : PhysicsGame
     /// <summary>
     /// Pelin ensimmäinen taso.
     /// </summary>
-    public static Vector Taso1()
+    public static Vector[] Taso1()
     {
         Vector[] polku = {
         new Vector(-100, 0),
@@ -145,4 +141,21 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
+    {
+        if (kohde == oikeaReuna) virus.Destroy();
+    }
+
+
+}
+
+class Virus : PhysicsObject
+{
+    public int Elamat { get; set; }
+
+    public Virus(double leveys, double korkeus, int elamia) // constructor eli muodostaja. luo virustyyppisen olion
+        : base(leveys, korkeus)
+    {
+        Elamat = elamia;
+    }
 }
