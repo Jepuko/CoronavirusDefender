@@ -14,7 +14,7 @@ using Jypeli.Widgets;
 public class Sokkelo : PhysicsGame
 {
     private PhysicsObject oikeaReuna;
-    // IntMeter ElamaLaskuri;
+    IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
     AssaultRifle torninAse;
 
@@ -23,7 +23,7 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         // LuoVirus(); PathWandererBrain
         PolkuaivoVirus();
-        // LuoTykkitorni();
+        LuoTykkitorni(30, 30, torninAse);
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += PolkuaivoVirus;
@@ -88,6 +88,7 @@ public class Sokkelo : PhysicsGame
         Image viruksenKuva = LoadImage("korona");
         virus.Image = viruksenKuva;
         virus.Restitution = 1.0;
+        virus.Tag = "virus"; // Virukselle luodaan tag.
         Add(virus);
 
         Vector[] polku = {
@@ -110,8 +111,6 @@ public class Sokkelo : PhysicsGame
 
         AddCollisionHandler(virus, VirusTormasi);
 
-        AddCollisionHandler(virus, AmmusOsui);
-
     }
 
 
@@ -131,25 +130,24 @@ public class Sokkelo : PhysicsGame
         tykkitorni.Y = 100.0;
         tykkitorni.Image = LoadImage("turret1");
 
-
-        FollowerBrain torninAivot = new FollowerBrain(10, 10, Shape.Rectangle);
+        FollowerBrain torninAivot = new FollowerBrain();
         torninAivot.Speed = 0;
         torninAivot.DistanceClose = 50;
         torninAivot.DistanceFar = 500;
-        torninAivot.TargetClose += delegate { TorniAmpuu(virus, torninAse); };
+        torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
 
-        torninAse = new AssaultRifle(50, 100);
-        torninAse.ProjectileCollision = AmmusOsui;
-        torninAse.InfiniteAmmo = true;
-        torninAse.Power.DefaultValue = 1;
-        torninAse.FireRate = 5.0;
-        torninAse.AmmoIgnoresGravity = true;
-        torninAse.CanHitOwner = false;
-        torninAse.AmmoIgnoresExplosions = true;
+        ase = new AssaultRifle(50, 100);
+        ase.ProjectileCollision = AmmusOsui;
+        ase.InfiniteAmmo = true;
+        ase.Power.DefaultValue = 1;
+        ase.FireRate = 5.0;
+        ase.AmmoIgnoresGravity = true;
+        ase.CanHitOwner = false;
+        ase.AmmoIgnoresExplosions = true;
         Image torninKuva = LoadImage("turret1");
-        torninAse.Image = torninKuva;
+        ase.Image = torninKuva;
         
-        tykkitorni.Add(torninAse);
+        tykkitorni.Add(ase);
 
         tykkitorni.Brain = torninAivot;
 
@@ -165,28 +163,31 @@ public class Sokkelo : PhysicsGame
     /// <param name="torni"></param>
     /// <param name="ase"></param>
 
-    public void TykkitorninLahella(PhysicsObject tykkitorni, AssaultRifle torninAse)
-    {
-        tykkitorni.Angle = (virus.Position - tykkitorni.Position).Angle;
-        TorniAmpuu(tykkitorni, torninAse);
-    }
 
-
-    public void TorniAmpuu(PhysicsObject tykkitorni, AssaultRifle torninAse)
+    public void TorniAmpuu(IGameObject kohde, AssaultRifle torninAse)
     {
+        // torninAse.Angle = (virus.Position - torninAse.Position).Angle;
         PhysicsObject ammus = torninAse.Shoot();
     }
 
 
-    public void AmmusOsui(PhysicsObject virus, PhysicsObject ammus)
+    public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
-        if (ammus == torninAse) virus.Destroy();
+        if (kohde.Tag.ToString() == "virus") kohde.Destroy();
     }
 
 
+    /// <summary>
+    /// Ohjelma tuhoaa viruksen, kun se osuu seinään.
+    /// </summary>
+    /// <param name="virus"></param>
+    /// <param name="kohde"></param>
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
         if (kohde == oikeaReuna) virus.Destroy();
+       // pelaaja.elamaLaskuri =- 1;
+
+       // if (kohde == ) virus
     }
 
 
@@ -212,6 +213,19 @@ public void LuoTaso1()
 
 }
 */
+
+
+public class Pelaaja : PhysicsObject
+{
+    private IntMeter elamaLaskuri = new IntMeter(3, 0, 3);
+    public IntMeter ElamaLaskuri { get { return elamaLaskuri; } }
+
+    public Pelaaja(double leveys, double korkeus)
+        : base(leveys, korkeus)
+    {
+        elamaLaskuri.LowerLimit += delegate { this.Destroy(); };
+    }
+}
 
 
 public class Virus : PhysicsObject
