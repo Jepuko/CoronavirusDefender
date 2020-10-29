@@ -132,8 +132,8 @@ public class Sokkelo : PhysicsGame
 
         FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus());
         torninAivot.Speed = 0;
-        torninAivot.DistanceClose = 50;
-        torninAivot.DistanceFar = 500;
+        torninAivot.DistanceClose = 500;
+        torninAivot.DistanceFar = 1000;
         torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
         // torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
         // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
