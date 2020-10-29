@@ -135,6 +135,9 @@ public class Sokkelo : PhysicsGame
         torninAivot.DistanceClose = 50;
         torninAivot.DistanceFar = 500;
         torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
+        torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
+        // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
+
 
         ase = new AssaultRifle(50, 100);
         ase.ProjectileCollision = AmmusOsui;
@@ -146,7 +149,7 @@ public class Sokkelo : PhysicsGame
         ase.AmmoIgnoresExplosions = true;
         Image torninKuva = LoadImage("turret1");
         ase.Image = torninKuva;
-        
+
         tykkitorni.Add(ase);
 
         tykkitorni.Brain = torninAivot;
@@ -164,10 +167,10 @@ public class Sokkelo : PhysicsGame
     /// <param name="ase"></param>
 
 
-    public void TorniAmpuu(IGameObject kohde, AssaultRifle torninAse)
+    public void TorniAmpuu(IGameObject kohde, AssaultRifle ase)
     {
         // torninAse.Angle = (virus.Position - torninAse.Position).Angle;
-        PhysicsObject ammus = torninAse.Shoot();
+        PhysicsObject ammus = ase.Shoot();
     }
 
 
