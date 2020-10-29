@@ -22,11 +22,10 @@ public class Sokkelo : PhysicsGame
     {
         LuoKentta();
         // LuoVirus(); PathWandererBrain
-        PolkuaivoVirus();
         LuoTykkitorni(30, 30, torninAse);
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
-        ajastin.Timeout += PolkuaivoVirus;
+        ajastin.Timeout += delegate { PolkuaivoVirus(); };
         ajastin.Start();
         
         // LuoTaso1();
@@ -80,7 +79,7 @@ public class Sokkelo : PhysicsGame
     }
     */
 
-    public void PolkuaivoVirus()
+    public PhysicsObject PolkuaivoVirus()
     {
         Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
         virus.X = -450.0;
@@ -111,6 +110,7 @@ public class Sokkelo : PhysicsGame
 
         AddCollisionHandler(virus, VirusTormasi);
 
+        return virus;
     }
 
 
@@ -130,12 +130,12 @@ public class Sokkelo : PhysicsGame
         tykkitorni.Y = 100.0;
         tykkitorni.Image = LoadImage("turret1");
 
-        FollowerBrain torninAivot = new FollowerBrain();
+        FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus());
         torninAivot.Speed = 0;
         torninAivot.DistanceClose = 50;
         torninAivot.DistanceFar = 500;
         torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
-        torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
+        // torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
         // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
 
 
