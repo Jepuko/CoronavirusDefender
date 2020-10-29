@@ -80,6 +80,40 @@ public class Sokkelo : PhysicsGame
     }
     */
 
+    public void PolkuaivoVirus()
+    {
+        Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
+        virus.X = -450.0;
+        virus.Y = 0.0;
+        Image viruksenKuva = LoadImage("korona");
+        virus.Image = viruksenKuva;
+        virus.Restitution = 1.0;
+        Add(virus);
+
+        Vector[] polku = {
+        new Vector(-100, 0),
+        new Vector(-100, 200),
+        new Vector(100, 200),
+        new Vector(100, -250),
+        new Vector(500, -250),
+        };
+
+        PathFollowerBrain polkuAivot = new PathFollowerBrain();
+
+        polkuAivot.Path = polku;
+
+        polkuAivot.Loop = true;
+
+        polkuAivot.Speed = 100;
+
+        virus.Brain = polkuAivot;
+
+        AddCollisionHandler(virus, VirusTormasi);
+
+        AddCollisionHandler(virus, AmmusOsui);
+
+    }
+
 
     /// <summary>
     /// Tykkitorni, joka tuhoaa viruksia. Aseena AssaultRifle, jossa loppumattomat ammukset.
@@ -137,64 +171,18 @@ public class Sokkelo : PhysicsGame
         TorniAmpuu(tykkitorni, torninAse);
     }
 
-    public void TorniAmpuu(PhysicsObject tykkitorni, AssaultRifle ase)
+
+    public void TorniAmpuu(PhysicsObject tykkitorni, AssaultRifle torninAse)
     {
         PhysicsObject ammus = torninAse.Shoot();
     }
 
 
-    public void PolkuaivoVirus()
+    public void AmmusOsui(PhysicsObject virus, PhysicsObject ammus)
     {
-        Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
-        virus.X = -450.0;
-        virus.Y = 0.0;
-        Image viruksenKuva = LoadImage("korona");
-        virus.Image = viruksenKuva;
-        virus.Restitution = 1.0;
-        Add(virus);
-
-        Vector[] polku = {
-        new Vector(-100, 0),
-        new Vector(-100, 200),
-        new Vector(100, 200),
-        new Vector(100, -250),
-        new Vector(500, -250),
-        };
-
-        PathFollowerBrain polkuAivot = new PathFollowerBrain();
-
-        polkuAivot.Path = polku;
-
-        polkuAivot.Loop = true;
-
-        polkuAivot.Speed = 100;
-
-        virus.Brain = polkuAivot;
-
-        AddCollisionHandler(virus, VirusTormasi);
-
-        AddCollisionHandler(virus, AmmusOsui);
-
+        if (ammus == torninAse) virus.Destroy();
     }
 
-    /*
-    /// <summary>
-    /// Pelin ensimmäinen taso.
-    /// </summary>
-    public void LuoTaso1()
-    {
-        Taso1 = new Vector[] polku;
-        
-        polku= {
-        new Vector(-100, 0);
-        new Vector(-100, 200);
-        new Vector(100, 200);
-        new Vector(100, -250);
-        new Vector(500, -250);
-        };
-
-    }
-    */
 
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
@@ -202,11 +190,29 @@ public class Sokkelo : PhysicsGame
     }
 
 
-    public void AmmusOsui(PhysicsObject virus, PhysicsObject ammus)
-    {
-        if (ammus == virus) virus.Destroy();
-    }
 }
+
+
+
+/*
+/// <summary>
+/// Pelin ensimmäinen taso.
+/// </summary>
+public void LuoTaso1()
+{
+    Taso1 = new Vector[] polku;
+
+    polku= {
+    new Vector(-100, 0);
+    new Vector(-100, 200);
+    new Vector(100, 200);
+    new Vector(100, -250);
+    new Vector(500, -250);
+    };
+
+}
+*/
+
 
 public class Virus : PhysicsObject
 {
