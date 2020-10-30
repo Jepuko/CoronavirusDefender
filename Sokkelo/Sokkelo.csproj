@@ -13,6 +13,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="Content\kentta1.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Content\korona.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

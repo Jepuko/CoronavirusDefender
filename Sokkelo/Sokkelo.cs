@@ -19,6 +19,8 @@ public class Sokkelo : PhysicsGame
     private AssaultRifle torninAse;
     private int aloitusRahat = 5;
     private IntMeter rahaLaskuri;
+    const int ruudunLeveys = 50;
+    const int ruudunKorkeus = 50;
 
     public override void Begin()
     {
@@ -41,26 +43,82 @@ public class Sokkelo : PhysicsGame
 
     public void LuoKentta()
     {
+        TileMap ruudut = TileMap.FromFile("kentta1.txt");
+        ruudut['='] = LuoYlareuna;
+        ruudut['a'] = LuoAlareuna;
+        ruudut['o'] = LuoOikeareuna;
+        ruudut['v'] = LuoVasenreuna;
+        ruudut['-'] = LuoPolku;
+        ruudut['#'] = LuoRuutu;
+        ruudut.Insert(ruudunLeveys, ruudunKorkeus);
+
+
         Camera.ZoomToLevel();
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
+    }
 
-        PhysicsObject vasenReuna = Level.CreateLeftBorder();
-        vasenReuna.Restitution = 1.0;
-        vasenReuna.IsVisible = false;
 
-        oikeaReuna = Level.CreateRightBorder();
-        oikeaReuna.Restitution = 1.0;
-        oikeaReuna.IsVisible = false;
+    PhysicsObject LuoRuutu()
+    {
+        PhysicsObject ruutu = PhysicsObject.CreateStaticObject(50.0, 50.0);
+        ruutu.Shape = Shape.Rectangle;
+        ruutu.Color = Color.Gray;
+        
+        return ruutu;
 
+    }
+
+    PhysicsObject LuoPolku()
+    {
+        PhysicsObject polku = PhysicsObject.CreateStaticObject(50.0, 50.0);
+        polku.Shape = Shape.Rectangle;
+        polku.Color = Color.Gray;
+
+        return polku;
+
+    }
+
+
+    PhysicsObject LuoYlareuna()
+    {
         PhysicsObject ylaReuna = Level.CreateTopBorder();
         ylaReuna.Restitution = 1.0;
         ylaReuna.IsVisible = false;
 
+        return ylaReuna;
+    }
+
+
+    PhysicsObject LuoAlareuna()
+    {
         PhysicsObject alaReuna = Level.CreateBottomBorder();
         alaReuna.Restitution = 1.0;
         alaReuna.IsVisible = false;
+
+        return alaReuna;
     }
+
+
+    PhysicsObject LuoOikeareuna()
+    {
+        oikeaReuna = Level.CreateRightBorder();
+        oikeaReuna.Restitution = 1.0;
+        oikeaReuna.IsVisible = false;
+
+        return oikeaReuna;
+    }
+
+
+    PhysicsObject LuoVasenreuna()
+    {
+        PhysicsObject vasenReuna = Level.CreateLeftBorder();
+        vasenReuna.Restitution = 1.0;
+        vasenReuna.IsVisible = false;
+
+        return vasenReuna;
+    }
+
 
     /*
     public void LuoVirus()
