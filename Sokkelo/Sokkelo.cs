@@ -54,8 +54,7 @@ public class Sokkelo : PhysicsGame
 
 
         Camera.ZoomToLevel();
-        Image taustaKuva = LoadImage("taustakuva");
-        Level.Background.Image = taustaKuva;
+        
     }
 
 
@@ -63,20 +62,21 @@ public class Sokkelo : PhysicsGame
     {
         PhysicsObject ruutu = PhysicsObject.CreateStaticObject(50.0, 50.0);
         ruutu.Shape = Shape.Rectangle;
-        ruutu.Color = Color.Gray;
-        
-        return ruutu;
+        Image taustaKuva = LoadImage("taustakuva");
+        Level.Background.Image = taustaKuva;
+        ruutu.Tag = "tyhjä ruutu";
 
+        return ruutu;
     }
 
     PhysicsObject LuoPolku()
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(50.0, 50.0);
         polku.Shape = Shape.Rectangle;
-        polku.Color = Color.Gray;
+        Image polunKuva = LoadImage("polku");
+        Level.Background.Image = polunKuva;
 
         return polku;
-
     }
 
 
