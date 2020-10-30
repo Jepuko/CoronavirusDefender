@@ -96,6 +96,7 @@ public class Sokkelo : PhysicsGame
         rahaNaytto.Color = Color.White;
 
         rahaNaytto.BindTo(rahaLaskuri);
+        rahaLaskuri.Value = rahat;
         Add(rahaNaytto);
     }
 
