@@ -52,9 +52,7 @@ public class Sokkelo : PhysicsGame
         ruudut['#'] = LuoRuutu;
         ruudut.Insert(ruudunLeveys, ruudunKorkeus);
 
-
         Camera.ZoomToLevel();
-        
     }
 
 
