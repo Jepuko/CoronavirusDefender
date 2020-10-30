@@ -14,21 +14,26 @@ using Jypeli.Widgets;
 public class Sokkelo : PhysicsGame
 {
     private PhysicsObject oikeaReuna;
-    IntMeter ElamaLaskuri;
+    private IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
-    AssaultRifle torninAse;
+    private AssaultRifle torninAse;
+    private int rahat = 5;
+    private IntMeter rahaLaskuri;
 
     public override void Begin()
     {
         LuoKentta();
         // LuoVirus(); PathWandererBrain
-        LuoTykkitorni(30, 30, torninAse);
+        LuoTykkitorni(30, 30, torninAse, new Vector(0, 100));
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += delegate { PolkuaivoVirus(); };
         ajastin.Start();
-        
+        // OstaTykki(new Vector(OstaTykki)); 
+        Mouse.IsCursorVisible = true;
+        Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta Tykki");
         // LuoTaso1();
+        LuoRahaLaskuri();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -79,6 +84,31 @@ public class Sokkelo : PhysicsGame
     }
     */
 
+    public void LuoRahaLaskuri()
+
+    {
+        rahaLaskuri = new IntMeter(0);
+
+        Label rahaNaytto = new Label();
+        rahaNaytto.X = Screen.Left + 100;
+        rahaNaytto.Y = Screen.Top - 100;
+        rahaNaytto.TextColor = Color.Black;
+        rahaNaytto.Color = Color.White;
+
+        rahaNaytto.BindTo(rahaLaskuri);
+        Add(rahaNaytto);
+    }
+
+    public void OstaTykki()
+    {
+        if (rahat < 5) return;
+        Vector sijainti = Mouse.PositionOnWorld;
+        AssaultRifle ase = new AssaultRifle(5, 5);
+        LuoTykkitorni(30, 30, ase, sijainti);
+        rahat -= 5;
+    }
+
+
     public PhysicsObject PolkuaivoVirus()
     {
         Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
@@ -121,16 +151,15 @@ public class Sokkelo : PhysicsGame
     /// <param name="korkeus"></param>
     /// <param name="ase"></param>
     /// <returns></returns>
-    public Torni LuoTykkitorni(double leveys, double korkeus, AssaultRifle ase)
+    public Torni LuoTykkitorni(double leveys, double korkeus, AssaultRifle ase, Vector sijainti)
     {
 
         Torni tykkitorni = new Torni(leveys, korkeus, ase);
         tykkitorni.Shape = Shape.Circle;
-        tykkitorni.X = 0.0;
-        tykkitorni.Y = 100.0;
+        tykkitorni.Position = sijainti;
         tykkitorni.Image = LoadImage("turret1");
 
-        FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus());
+        FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus()); // korjaa, että tykki ampuu oikeaan osoitteeseen ja kääntyy virusta kohti
         torninAivot.Speed = 0;
         torninAivot.DistanceClose = 500;
         torninAivot.DistanceFar = 1000;
@@ -176,7 +205,11 @@ public class Sokkelo : PhysicsGame
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
-        if (kohde.Tag.ToString() == "virus") kohde.Destroy();
+        if (kohde.Tag.ToString() == "virus") 
+        {
+            kohde.Destroy(); 
+            rahat += 10;
+        }
     }
 
 
