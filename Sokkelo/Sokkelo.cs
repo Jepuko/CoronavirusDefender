@@ -17,7 +17,7 @@ public class Sokkelo : PhysicsGame
     private IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
     private AssaultRifle torninAse;
-    private int rahat = 5;
+    private int aloitusRahat = 5;
     private IntMeter rahaLaskuri;
 
     public override void Begin()
@@ -96,17 +96,23 @@ public class Sokkelo : PhysicsGame
         rahaNaytto.Color = Color.White;
 
         rahaNaytto.BindTo(rahaLaskuri);
-        rahaLaskuri.Value = rahat;
+        rahaLaskuri.Value = aloitusRahat;
         Add(rahaNaytto);
     }
 
     public void OstaTykki()
     {
-        if (rahat < 5) return;
+        if (rahaLaskuri.Value < 5) return;
         Vector sijainti = Mouse.PositionOnWorld;
-        AssaultRifle ase = new AssaultRifle(5, 5);
-        LuoTykkitorni(30, 30, ase, sijainti);
-        rahat -= 5;
+        foreach (GameObject olio in GetObjectsAt(sijainti))
+        {
+            if (olio.Tag.ToString() != "tyhjä ruutu") return; // declare "tyhjä ruutu" myöhemmin, kun luodaan kenttä
+
+            AssaultRifle ase = new AssaultRifle(5, 5);
+            LuoTykkitorni(30, 30, ase, olio.Position);
+            rahaLaskuri.AddValue(-5);
+            olio.Tag = "käytetty ruutu";
+        }
     }
 
 
@@ -209,7 +215,7 @@ public class Sokkelo : PhysicsGame
         if (kohde.Tag.ToString() == "virus") 
         {
             kohde.Destroy(); 
-            rahat += 10;
+            rahaLaskuri.AddValue (1);
         }
     }
 
