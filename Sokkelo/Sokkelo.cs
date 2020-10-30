@@ -43,78 +43,41 @@ public class Sokkelo : PhysicsGame
 
     public void LuoKentta()
     {
-        TileMap ruudut = TileMap.FromFile("kentta1.txt");
-        ruudut['='] = LuoYlareuna;
-        ruudut['a'] = LuoAlareuna;
-        ruudut['o'] = LuoOikeareuna;
-        ruudut['v'] = LuoVasenreuna;
-        ruudut['-'] = LuoPolku;
-        ruudut['#'] = LuoRuutu;
-        ruudut.Insert(ruudunLeveys, ruudunKorkeus);
+        TileMap ruudut = TileMap.FromFile("Content\\kentta1.txt");
+        // ruudut.SetTileMethod('=', LuoYlareuna);
+        // ruudut.SetTileMethod('a', LuoAlareuna);
+        // ruudut.SetTileMethod('o', LuoOikeareuna);
+        // ruudut.SetTileMethod('v', LuoVasenreuna);
+        ruudut.SetTileMethod('p', LuoPolku);
+        ruudut.SetTileMethod('#', LuoRuutu);
+        ruudut.Execute(ruudunLeveys, ruudunKorkeus);
 
         Camera.ZoomToLevel();
-    }
-
-
-    PhysicsObject LuoRuutu()
-    {
-        PhysicsObject ruutu = PhysicsObject.CreateStaticObject(50.0, 50.0);
-        ruutu.Shape = Shape.Rectangle;
+        oikeaReuna = Level.CreateRightBorder();
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
+    }
+
+
+    void LuoRuutu(Vector sijainti, double leveys, double korkeus)
+    {
+        PhysicsObject ruutu = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        ruutu.Position = sijainti;
+        ruutu.Shape = Shape.Rectangle;
         ruutu.Tag = "tyhjä ruutu";
-
-        return ruutu;
+        ruutu.Color = Color.Transparent;
+        Add(ruutu);
     }
 
-    PhysicsObject LuoPolku()
+    void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(50.0, 50.0);
+        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
+        polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
-        Level.Background.Image = polunKuva;
-
-        return polku;
-    }
-
-
-    PhysicsObject LuoYlareuna()
-    {
-        PhysicsObject ylaReuna = Level.CreateTopBorder();
-        ylaReuna.Restitution = 1.0;
-        ylaReuna.IsVisible = false;
-
-        return ylaReuna;
-    }
-
-
-    PhysicsObject LuoAlareuna()
-    {
-        PhysicsObject alaReuna = Level.CreateBottomBorder();
-        alaReuna.Restitution = 1.0;
-        alaReuna.IsVisible = false;
-
-        return alaReuna;
-    }
-
-
-    PhysicsObject LuoOikeareuna()
-    {
-        oikeaReuna = Level.CreateRightBorder();
-        oikeaReuna.Restitution = 1.0;
-        oikeaReuna.IsVisible = false;
-
-        return oikeaReuna;
-    }
-
-
-    PhysicsObject LuoVasenreuna()
-    {
-        PhysicsObject vasenReuna = Level.CreateLeftBorder();
-        vasenReuna.Restitution = 1.0;
-        vasenReuna.IsVisible = false;
-
-        return vasenReuna;
+        polku.Image = polunKuva;
+        polku.IgnoresCollisionResponse = true;
+        Add(polku);
     }
 
 
@@ -156,7 +119,7 @@ public class Sokkelo : PhysicsGame
         Add(rahaNaytto);
     }
 
-    public void OstaTykki()
+    public void OstaTykki() // korjaa tykkien ostaminen
     {
         if (rahaLaskuri.Value < 5) return;
         Vector sijainti = Mouse.PositionOnWorld;
@@ -183,7 +146,7 @@ public class Sokkelo : PhysicsGame
         virus.Tag = "virus"; // Virukselle luodaan tag.
         Add(virus);
 
-        Vector[] polku = {
+        Vector[] polku = { // korjaa polun koordinaatit matchaamaan tekstitiedoston polkua
         new Vector(-100, 0),
         new Vector(-100, 200),
         new Vector(100, 200),
