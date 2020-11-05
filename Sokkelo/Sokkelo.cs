@@ -341,7 +341,6 @@ public class Sokkelo : PhysicsGame
         {
             virus.StopMoveTo();
             virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
-            virus.Remove(kohde);
         }
 
         if (kohde.Tag.ToString() == "V")
