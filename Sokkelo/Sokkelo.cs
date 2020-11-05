@@ -22,6 +22,7 @@ public class Sokkelo : PhysicsGame
     const int ruudunLeveys = 50;
     const int ruudunKorkeus = 50;
     List<Vector> koordinaatit = new List<Vector>();
+    private Vector alku;
 
     public override void Begin()
     {
@@ -49,6 +50,7 @@ public class Sokkelo : PhysicsGame
         // ruudut.SetTileMethod('a', LuoAlareuna);
         // ruudut.SetTileMethod('o', LuoOikeareuna);
         // ruudut.SetTileMethod('v', LuoVasenreuna);
+        ruudut.SetTileMethod('A', LuoAlku);
         ruudut.SetTileMethod('p', LuoPolku);
         ruudut.SetTileMethod('#', LuoRuutu);
         ruudut.SetTileMethod('>', LuoOikea);
@@ -64,6 +66,18 @@ public class Sokkelo : PhysicsGame
         Level.Background.Image = taustaKuva;
 
         // muuta lista taulukoksi -> taulukko PolkuAivovirukselle
+    }
+
+
+    void LuoAlku(Vector sijainti, double leveys, double korkeus)
+    {
+        PhysicsObject ruutu = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        ruutu.Position = sijainti;
+        ruutu.Shape = Shape.Rectangle;
+        ruutu.Tag = "alku";
+        ruutu.Color = Color.Transparent;
+        alku = sijainti;
+        Add(ruutu);
     }
 
 
@@ -102,6 +116,7 @@ public class Sokkelo : PhysicsGame
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
         koordinaatit.Add(sijainti);
         polku.Tag = ">";
+        polku.CollisionIgnoreGroup = 1;
         Add(polku, -3);
     }
 
@@ -116,6 +131,7 @@ public class Sokkelo : PhysicsGame
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
         koordinaatit.Add(sijainti);
         polku.Tag = "V";
+        polku.CollisionIgnoreGroup = 1;
         Add(polku, -3);
     }
 
@@ -130,6 +146,7 @@ public class Sokkelo : PhysicsGame
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
         koordinaatit.Add(sijainti);
         polku.Tag = "^";
+        polku.CollisionIgnoreGroup = 1;
         Add(polku, -3);
     }
 
@@ -206,8 +223,9 @@ public class Sokkelo : PhysicsGame
     public PhysicsObject PolkuaivoVirus()
     {
         Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 5);
-        virus.X = -450.0;
-        virus.Y = 0.0;
+        virus.Position = alku;
+        virus.CollisionIgnoreGroup = 1;
+        virus.IgnoresCollisionResponse = true;
         Image viruksenKuva = LoadImage("korona");
         virus.Image = viruksenKuva;
         virus.Restitution = 1.0;
@@ -222,7 +240,7 @@ public class Sokkelo : PhysicsGame
         new Vector(100, -250),
         new Vector(500, -250),
         };
-    */
+
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
         polkuAivot.Path = koordinaatit;
@@ -232,6 +250,10 @@ public class Sokkelo : PhysicsGame
         polkuAivot.Speed = 100;
 
         virus.Brain = polkuAivot;
+
+        polkuAivot.Active = true;
+
+        */
 
         AddCollisionHandler(virus, VirusTormasi);
 
@@ -315,7 +337,31 @@ public class Sokkelo : PhysicsGame
     /// <param name="kohde"></param>
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
-        if (kohde.Tag.ToString() == ">") virus.
+        if (kohde.Tag.ToString() == "alku")
+        {
+            virus.StopMoveTo();
+            virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
+            virus.Remove(kohde);
+        }
+
+        if (kohde.Tag.ToString() == "V")
+        {
+            virus.StopMoveTo();
+            virus.MoveTo(kohde.Position + new Vector(0, -ruudunKorkeus), 100, null);
+        }
+
+        if (kohde.Tag.ToString() == "^")
+        {
+            virus.StopMoveTo();
+            virus.MoveTo(kohde.Position + new Vector(0, ruudunKorkeus), 100, null);
+        }
+
+        if (kohde.Tag.ToString() == ">")
+        {
+            virus.StopMoveTo();
+            virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
+        }
+
         if (kohde.Tag.ToString() == "maali") virus.Destroy();
        // pelaaja.elamaLaskuri =- 1;
 
