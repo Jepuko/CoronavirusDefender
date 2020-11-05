@@ -51,10 +51,15 @@ public class Sokkelo : PhysicsGame
         // ruudut.SetTileMethod('v', LuoVasenreuna);
         ruudut.SetTileMethod('p', LuoPolku);
         ruudut.SetTileMethod('#', LuoRuutu);
+        ruudut.SetTileMethod('>', LuoOikea);
+        ruudut.SetTileMethod('V', LuoAlas);
+        ruudut.SetTileMethod('^', LuoYlos);
+        ruudut.SetTileMethod('m', LuoMaali);
         ruudut.Execute(ruudunLeveys, ruudunKorkeus);
 
         Camera.ZoomToLevel();
         oikeaReuna = Level.CreateRightBorder();
+        oikeaReuna.Tag = "maali";
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
 
@@ -72,19 +77,74 @@ public class Sokkelo : PhysicsGame
         Add(ruutu);
     }
 
-
-    void LuoPolku(Vector sijainti, double leveys, double korkeus)
+    void LuoMaali(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
         polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
-        polku.IgnoresCollisionResponse = true;
-        Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti - korjattuSijainti);
+        // polku.IgnoresCollisionResponse = true;
+        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti);
+        polku.Tag = "maali";
+        Add(polku, -3);
+    }
 
-        Add(polku);
+    void LuoOikea(Vector sijainti, double leveys, double korkeus)
+    {
+        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        polku.Shape = Shape.Rectangle;
+        polku.Position = sijainti;
+        Image polunKuva = LoadImage("polku");
+        polku.Image = polunKuva;
+        // polku.IgnoresCollisionResponse = true;
+        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti);
+        polku.Tag = ">";
+        Add(polku, -3);
+    }
+
+    void LuoAlas(Vector sijainti, double leveys, double korkeus)
+    {
+        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        polku.Shape = Shape.Rectangle;
+        polku.Position = sijainti;
+        Image polunKuva = LoadImage("polku");
+        polku.Image = polunKuva;
+        // polku.IgnoresCollisionResponse = true;
+        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti);
+        polku.Tag = "V";
+        Add(polku, -3);
+    }
+
+    void LuoYlos(Vector sijainti, double leveys, double korkeus)
+    {
+        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        polku.Shape = Shape.Rectangle;
+        polku.Position = sijainti;
+        Image polunKuva = LoadImage("polku");
+        polku.Image = polunKuva;
+        // polku.IgnoresCollisionResponse = true;
+        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti);
+        polku.Tag = "^";
+        Add(polku, -3);
+    }
+
+    void LuoPolku(Vector sijainti, double leveys, double korkeus)
+    {
+        // PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
+        GameObject polku = new GameObject(leveys, korkeus);
+        polku.Shape = Shape.Rectangle;
+        polku.Position = sijainti;
+        Image polunKuva = LoadImage("polku");
+        polku.Image = polunKuva;
+        // polku.IgnoresCollisionResponse = true;
+        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti);
+        Add(polku, -3);
     }
 
 
@@ -167,7 +227,7 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Path = koordinaatit;
 
-        polkuAivot.Loop = true;
+        polkuAivot.Loop = false;
 
         polkuAivot.Speed = 100;
 
@@ -255,7 +315,8 @@ public class Sokkelo : PhysicsGame
     /// <param name="kohde"></param>
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
-        if (kohde == oikeaReuna) virus.Destroy();
+        if (kohde.Tag.ToString() == ">") virus.
+        if (kohde.Tag.ToString() == "maali") virus.Destroy();
        // pelaaja.elamaLaskuri =- 1;
 
        // if (kohde == ) virus
