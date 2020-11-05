@@ -81,7 +81,8 @@ public class Sokkelo : PhysicsGame
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
         polku.IgnoresCollisionResponse = true;
-        koordinaatit.Add(sijainti);
+        Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
+        koordinaatit.Add(sijainti - korjattuSijainti);
 
         Add(polku);
     }
