@@ -21,6 +21,7 @@ public class Sokkelo : PhysicsGame
     private IntMeter rahaLaskuri;
     const int ruudunLeveys = 50;
     const int ruudunKorkeus = 50;
+    List<Vector> koordinaatit = new List<Vector>();
 
     public override void Begin()
     {
@@ -56,6 +57,8 @@ public class Sokkelo : PhysicsGame
         oikeaReuna = Level.CreateRightBorder();
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
+
+        // muuta lista taulukoksi -> taulukko PolkuAivovirukselle
     }
 
 
@@ -69,6 +72,7 @@ public class Sokkelo : PhysicsGame
         Add(ruutu);
     }
 
+
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -77,6 +81,8 @@ public class Sokkelo : PhysicsGame
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
         polku.IgnoresCollisionResponse = true;
+        koordinaatit.Add(sijainti);
+
         Add(polku);
     }
 
@@ -119,6 +125,7 @@ public class Sokkelo : PhysicsGame
         Add(rahaNaytto);
     }
 
+
     public void OstaTykki() // korjaa tykkien ostaminen
     {
         if (rahaLaskuri.Value < 5) return;
@@ -137,7 +144,7 @@ public class Sokkelo : PhysicsGame
 
     public PhysicsObject PolkuaivoVirus()
     {
-        Virus virus = new Virus(2 * 22.0, 2 * 22.0, 5);
+        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 5);
         virus.X = -450.0;
         virus.Y = 0.0;
         Image viruksenKuva = LoadImage("korona");
@@ -146,6 +153,7 @@ public class Sokkelo : PhysicsGame
         virus.Tag = "virus"; // Virukselle luodaan tag.
         Add(virus);
 
+        /*
         Vector[] polku = { // korjaa polun koordinaatit matchaamaan tekstitiedoston polkua
         new Vector(-100, 0),
         new Vector(-100, 200),
@@ -153,10 +161,10 @@ public class Sokkelo : PhysicsGame
         new Vector(100, -250),
         new Vector(500, -250),
         };
-
+    */
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
-        polkuAivot.Path = polku;
+        polkuAivot.Path = koordinaatit;
 
         polkuAivot.Loop = true;
 
