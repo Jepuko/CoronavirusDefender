@@ -457,8 +457,11 @@ public class Sokkelo : PhysicsGame
     /// </summary>
     /// <param name="virus"></param>
     /// <param name="kohde"></param>
+    /// 
+
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
+        /*
         if (kohde.Tag.ToString() == "alku")
         {
             virus.StopMoveTo();
@@ -482,14 +485,12 @@ public class Sokkelo : PhysicsGame
             virus.StopMoveTo();
             virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
         }
-
+        */
         if (kohde.Tag.ToString() == "maali") virus.Destroy();
        // pelaaja.elamaLaskuri =- 1;
 
        // if (kohde == ) virus
     }
-
-
 }
 
 
