@@ -17,7 +17,7 @@ public class Sokkelo : PhysicsGame
     private PhysicsObject oikeaReuna;
     private IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
-    private AssaultRifle torninAse;
+   // private AssaultRifle torninAse = new AssaultRifle(50, 100);
     private int aloitusRahat = 5;
     private IntMeter rahaLaskuri;
     const int ruudunLeveys = 50;
@@ -31,7 +31,7 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         LuoAivot();
         // LuoVirus(); PathWandererBrain
-        LuoTykkitorni(30, 30, torninAse, new Vector(0, 100));
+        LuoTykkitorni(30, 30, new AssaultRifle(50, 100), new Vector(0, 100));
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += delegate { PolkuaivoVirus(); };
@@ -188,11 +188,12 @@ public class Sokkelo : PhysicsGame
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
         // PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        GameObject polku = new GameObject(leveys, korkeus);
+        PhysicsObject polku = new PhysicsObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
         polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
+        polku.IgnoresCollisionResponse = true;
         // polku.IgnoresCollisionResponse = true;
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
         // koordinaatit.Add(sijainti);
@@ -327,14 +328,14 @@ public class Sokkelo : PhysicsGame
         // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
 
 
-        ase = new AssaultRifle(50, 100);
         ase.ProjectileCollision = AmmusOsui;
         ase.InfiniteAmmo = true;
-        ase.Power.DefaultValue = 1;
-        ase.FireRate = 5.0;
+        ase.Power.DefaultValue = 100;
+        ase.FireRate = 1.0;
         ase.AmmoIgnoresGravity = true;
         ase.CanHitOwner = false;
         ase.AmmoIgnoresExplosions = true;
+        ase.AttackSound = null;
         Image torninKuva = LoadImage("turret1");
         ase.Image = torninKuva;
 
@@ -357,17 +358,22 @@ public class Sokkelo : PhysicsGame
 
     public void TorniAmpuu(IGameObject kohde, AssaultRifle ase)
     {
-        // torninAse.Angle = (kohde.Position - torninAse.Position).Angle;
+        Vector suunta = (kohde.Position - ase.Position).Normalize();
+        ase.Angle = suunta.Angle;
+        // ase.Angle = (kohde.Position - ase.Position).Angle;
         PhysicsObject ammus = ase.Shoot();
     }
 
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
+        ammus.IgnoresCollisionResponse = true;
+       // ammus.IgnoresCollisionWith = true;
         if (kohde.Tag.ToString() == "virus") 
         {
             kohde.Destroy(); 
             rahaLaskuri.AddValue (1);
+            ammus.Destroy();
         }
     }
 
