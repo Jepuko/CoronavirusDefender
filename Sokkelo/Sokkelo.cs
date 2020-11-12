@@ -13,6 +13,7 @@ using Jypeli.Widgets;
 /// </summary>
 public class Sokkelo : PhysicsGame
 {
+
     private PhysicsObject oikeaReuna;
     private IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
@@ -21,12 +22,14 @@ public class Sokkelo : PhysicsGame
     private IntMeter rahaLaskuri;
     const int ruudunLeveys = 50;
     const int ruudunKorkeus = 50;
-    List<Vector> koordinaatit = new List<Vector>();
+    List<Koordinaatti> koordinaatit = new List<Koordinaatti>();
     private Vector alku;
+    private List<Vector> polku = new List<Vector>();
 
     public override void Begin()
     {
         LuoKentta();
+        LuoAivot();
         // LuoVirus(); PathWandererBrain
         LuoTykkitorni(30, 30, torninAse, new Vector(0, 100));
         Timer ajastin = new Timer();
@@ -45,7 +48,7 @@ public class Sokkelo : PhysicsGame
 
     public void LuoKentta()
     {
-        TileMap ruudut = TileMap.FromFile("Content\\kentta1.txt");
+        TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
         // ruudut.SetTileMethod('=', LuoYlareuna);
         // ruudut.SetTileMethod('a', LuoAlareuna);
         // ruudut.SetTileMethod('o', LuoOikeareuna);
@@ -56,15 +59,15 @@ public class Sokkelo : PhysicsGame
         ruudut.SetTileMethod('A', LuoAlku);
         ruudut.SetTileMethod('#', LuoPolku);
         ruudut.SetTileMethod('.', LuoRuutu);
-        ruudut.SetTileMethod('M', LuoMaali);
-        ruudut.SetTileMethod('B', Luo1Koordinaatti);
-        ruudut.SetTileMethod('C', Luo2Koordinaatti);
-        ruudut.SetTileMethod('D', Luo3Koordinaatti);
-        ruudut.SetTileMethod('E', Luo4Koordinaatti);
-        ruudut.SetTileMethod('F', Luo5Koordinaatti);
-        ruudut.SetTileMethod('G', Luo6Koordinaatti);
-        ruudut.SetTileMethod('H', Luo7Koordinaatti);
-        ruudut.SetTileMethod('I', Luo8Koordinaatti);
+        ruudut.SetTileMethod('M', LuoMaali, 9);
+        ruudut.SetTileMethod('B', LuoKoordinaatti, 1, "B");
+        ruudut.SetTileMethod('C', LuoKoordinaatti, 2, "C");
+        ruudut.SetTileMethod('D', LuoKoordinaatti, 3, "D");
+        ruudut.SetTileMethod('E', LuoKoordinaatti, 4, "E");
+        ruudut.SetTileMethod('F', LuoKoordinaatti, 5, "F");
+        ruudut.SetTileMethod('G', LuoKoordinaatti, 6, "G");
+        ruudut.SetTileMethod('H', LuoKoordinaatti, 7, "H");
+        ruudut.SetTileMethod('I', LuoKoordinaatti, 8, "I");
 
         ruudut.Execute(ruudunLeveys, ruudunKorkeus);
 
@@ -101,7 +104,7 @@ public class Sokkelo : PhysicsGame
     }
 
 
-    void LuoMaali(Vector sijainti, double leveys, double korkeus)
+    void LuoMaali(Vector sijainti, double leveys, double korkeus, int jarjestysnumero)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
@@ -110,13 +113,15 @@ public class Sokkelo : PhysicsGame
         polku.Image = polunKuva;
         // polku.IgnoresCollisionResponse = true;
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
+        // koordinaatit.Add(sijainti);
+        Koordinaatti koordinaatti = new Koordinaatti(jarjestysnumero, sijainti);
+        koordinaatit.Add(koordinaatti);
         polku.Tag = "maali";
         Add(polku, -3);
     }
 
 
-    void Luo1Koordinaatti(Vector sijainti, double leveys, double korkeus)
+    void LuoKoordinaatti(Vector sijainti, double leveys, double korkeus, int jarjestysnumero, string tag)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
@@ -125,117 +130,14 @@ public class Sokkelo : PhysicsGame
         polku.Image = polunKuva;
         // polku.IgnoresCollisionResponse = true;
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "B";
+        // koordinaatit.Add(sijainti);
+        Koordinaatti koordinaatti = new Koordinaatti(jarjestysnumero, sijainti);
+        koordinaatit.Add(koordinaatti);
+        polku.Tag = tag;
         polku.CollisionIgnoreGroup = 1;
         Add(polku, -3);
     }
 
-
-    void Luo2Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "C";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo3Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "D";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo4Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "E";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo5Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "G";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo6Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "H";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo7Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "I";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void Luo8Koordinaatti(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "J";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
     /*
     void LuoOikea(Vector sijainti, double leveys, double korkeus)
     {
@@ -282,7 +184,7 @@ public class Sokkelo : PhysicsGame
         Add(polku, -3);
     }
     */
-
+ 
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
         // PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -293,8 +195,26 @@ public class Sokkelo : PhysicsGame
         polku.Image = polunKuva;
         // polku.IgnoresCollisionResponse = true;
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
+        // koordinaatit.Add(sijainti);
         Add(polku, -3);
+    }
+    /// <summary>
+    /// Järjestetään koordinaatit suuruusjärjestykseen ja luodaan näillä aivoille polku.
+    /// </summary>
+    void LuoAivot()
+    {
+        koordinaatit.Sort(new Comparison<Koordinaatti>(VertaaKoordinaatteja));
+        for (int i = 0; i < koordinaatit.Count; i++)
+        {
+            polku.Add(koordinaatit[i].sijainti);
+        }
+    }
+
+    int VertaaKoordinaatteja(Koordinaatti k1, Koordinaatti k2)
+    {
+        if (k1.jarjestysnumero > k2.jarjestysnumero) return 1;
+        if (k1.jarjestysnumero < k2.jarjestysnumero) return -1;
+        return 0;
     }
 
 
@@ -367,7 +287,7 @@ public class Sokkelo : PhysicsGame
 
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
 
-        polkuAivot.Path = koordinaatit;
+        polkuAivot.Path = polku;
 
         polkuAivot.Loop = false;
 
@@ -551,5 +471,18 @@ public class Torni : PhysicsObject
         : base(leveys, korkeus)
     {
         torninAse = ase;
+    }
+}
+/// <summary>
+/// Luodaan koordinaatti-luokka.
+/// </summary>
+public class Koordinaatti
+{
+    public int jarjestysnumero;
+    public Vector sijainti;
+    public Koordinaatti(int jarjestysnumero, Vector sijainti)
+    {
+        this.jarjestysnumero = jarjestysnumero;
+        this.sijainti = sijainti;
     }
 }
