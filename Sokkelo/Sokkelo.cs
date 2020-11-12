@@ -357,7 +357,7 @@ public class Sokkelo : PhysicsGame
 
     public void TorniAmpuu(IGameObject kohde, AssaultRifle ase)
     {
-        // torninAse.Angle = (virus.Position - torninAse.Position).Angle;
+        // torninAse.Angle = (kohde.Position - torninAse.Position).Angle;
         PhysicsObject ammus = ase.Shoot();
     }
 
