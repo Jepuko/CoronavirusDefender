@@ -31,7 +31,7 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         LuoAivot();
         // LuoVirus(); PathWandererBrain
-        LuoTykkitorni(30, 30, new AssaultRifle(50, 100), new Vector(0, 100));
+        LuoTykkitorni(30, 30, new AssaultRifle(80, 40), new Vector(0, 100));
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += delegate { PolkuaivoVirus(); };
@@ -194,6 +194,7 @@ public class Sokkelo : PhysicsGame
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
         polku.IgnoresCollisionResponse = true;
+        // polku.CollisionIgnoreGroup = 2;
         // polku.IgnoresCollisionResponse = true;
         // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
         // koordinaatit.Add(sijainti);
@@ -317,7 +318,7 @@ public class Sokkelo : PhysicsGame
         Torni tykkitorni = new Torni(leveys, korkeus, ase);
         tykkitorni.Shape = Shape.Circle;
         tykkitorni.Position = sijainti;
-        tykkitorni.Image = LoadImage("turret1");
+        tykkitorni.Color = Color.Transparent;
 
         FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus()); // korjaa, että tykki ampuu oikeaan osoitteeseen ja kääntyy virusta kohti
         torninAivot.Speed = 0;
@@ -367,6 +368,7 @@ public class Sokkelo : PhysicsGame
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
+        // ammus.CollisionIgnoreGroup = 2;
         ammus.IgnoresCollisionResponse = true;
        // ammus.IgnoresCollisionWith = true;
         if (kohde.Tag.ToString() == "virus") 
