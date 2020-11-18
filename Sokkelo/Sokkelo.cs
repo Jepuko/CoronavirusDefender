@@ -279,7 +279,7 @@ public class Sokkelo : PhysicsGame
 
     public PhysicsObject PolkuaivoVirus()
     {
-        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 5);
+        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 2);
         virus.Position = alku;
         virus.CollisionIgnoreGroup = 1;
         virus.IgnoresCollisionResponse = true;
@@ -296,7 +296,7 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Loop = false;
 
-        polkuAivot.Speed = 100;
+        polkuAivot.Speed = 200;
 
         virus.Brain = polkuAivot;
 
@@ -332,14 +332,14 @@ public class Sokkelo : PhysicsGame
         // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
         // TorniAmpuu(torninAivot.CurrentTarget, ase);
         Timer ajastin = new Timer();
-        ajastin.Interval = 1.5;
+        ajastin.Interval = 1.0;
         ajastin.Timeout += delegate { TorniAmpuu(virukset, ase); };
         ajastin.Start();
         ase.Position = tykkitorni.Position;
         ase.ProjectileCollision = AmmusOsui;
         ase.InfiniteAmmo = true;
         ase.Power.DefaultValue = 100;
-        ase.FireRate = 1.0;
+        ase.FireRate = 100.0;
         ase.AmmoIgnoresGravity = true;
         ase.CanHitOwner = false;
         ase.AmmoIgnoresExplosions = true;
@@ -357,11 +357,11 @@ public class Sokkelo : PhysicsGame
     }
 
 
-    /// <summary>
-    /// Mitä tapahtuu kun virus tulee tarpeeksi lähelle tornia.
-    /// </summary>
-    /// <param name="torni"></param>
-    /// <param name="ase"></param>
+   /// <summary>
+   /// Torni ampuu viruksia. Kun virus pääsee maaliin, alkaa torni ampua jostain syystä joka toisella yli.
+   /// </summary>
+   /// <param name="kohteet">Mitä ammutaan</param>
+   /// <param name="ase">Millä ammutaan</param>
 
 
     public void TorniAmpuu(List<Virus> kohteet, AssaultRifle ase)
@@ -377,24 +377,37 @@ public class Sokkelo : PhysicsGame
         PhysicsObject ammus = ase.Shoot();
         if (ammus != null)
             ammus.IgnoresCollisionResponse = true;
+        MessageDisplay.Add(kohde.Position.ToString());
     }
 
     public Virus HeikoinLenkki(List<Virus> kohteet)
     {
+        int heikoin = int.MaxValue;
         for (int i = 0; i < kohteet.Count; i++)
-            if (kohteet[i].Elamat )
+            if (kohteet[i].Elamat <= heikoin)
+                heikoin = i;
+        return kohteet[heikoin];
     }
+
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
         // ammus.CollisionIgnoreGroup = 2;
         ammus.IgnoresCollisionResponse = true;
        // ammus.IgnoresCollisionWith = true;
+
+
         if (kohde.Tag.ToString() == "virus") 
         {
-            kohde.Destroy(); 
-            rahaLaskuri.AddValue (1);
+            Virus virus = (Virus)kohde;
+            virus.Elamat -= 1;
             ammus.Destroy();
+            if (virus.Elamat <= 0)
+            {
+                rahaLaskuri.AddValue(1);
+                kohde.Destroy();
+                virukset.Remove((Virus)kohde);
+            }
         }
     }
 
@@ -433,10 +446,15 @@ public class Sokkelo : PhysicsGame
             virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
         }
         */
-        if (kohde.Tag.ToString() == "maali") virus.Destroy();
-       // pelaaja.elamaLaskuri =- 1;
+        if (kohde.Tag.ToString() == "maali")
+        {
+            virus.Destroy();
+            virukset.Remove((Virus)virus);
+        }
+        
+        // pelaaja.elamaLaskuri =- 1;
 
-       // if (kohde == ) virus
+        // if (kohde == ) virus
     }
 }
 
@@ -483,7 +501,6 @@ public class Virus : PhysicsObject
         : base(leveys, korkeus)
     {
         Elamat = elamia;
-
     }
 }
 
