@@ -25,6 +25,7 @@ public class Sokkelo : PhysicsGame
     List<Koordinaatti> koordinaatit = new List<Koordinaatti>();
     private Vector alku;
     private List<Vector> polku = new List<Vector>();
+    private List<Virus> virukset = new List<Virus>();
 
     public override void Begin()
     {
@@ -41,6 +42,7 @@ public class Sokkelo : PhysicsGame
         Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta Tykki");
         // LuoTaso1();
         LuoRahaLaskuri();
+
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -285,6 +287,7 @@ public class Sokkelo : PhysicsGame
         virus.Image = viruksenKuva;
         virus.Restitution = 1.0;
         virus.Tag = "virus"; // Virukselle luodaan tag.
+        virukset.Add(virus);
         Add(virus);
 
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
@@ -320,15 +323,19 @@ public class Sokkelo : PhysicsGame
         tykkitorni.Position = sijainti;
         tykkitorni.Color = Color.Transparent;
 
-        FollowerBrain torninAivot = new FollowerBrain(PolkuaivoVirus()); // korjaa, että tykki ampuu oikeaan osoitteeseen ja kääntyy virusta kohti
-        torninAivot.Speed = 0;
-        torninAivot.DistanceClose = 500;
-        torninAivot.DistanceFar = 1000;
-        torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
+        // FollowerBrain torninAivot = new FollowerBrain(virukset);
+        // torninAivot.Speed = 0;
+        // torninAivot.DistanceClose = 500;
+        // torninAivot.DistanceFar = 1000;
+        // torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
         // torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
         // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
-
-
+        // TorniAmpuu(torninAivot.CurrentTarget, ase);
+        Timer ajastin = new Timer();
+        ajastin.Interval = 1.5;
+        ajastin.Timeout += delegate { TorniAmpuu(virukset, ase); };
+        ajastin.Start();
+        ase.Position = tykkitorni.Position;
         ase.ProjectileCollision = AmmusOsui;
         ase.InfiniteAmmo = true;
         ase.Power.DefaultValue = 100;
@@ -342,7 +349,7 @@ public class Sokkelo : PhysicsGame
 
         tykkitorni.Add(ase);
 
-        tykkitorni.Brain = torninAivot;
+        // tykkitorni.Brain = torninAivot;
 
         Add(tykkitorni);
 
@@ -357,14 +364,26 @@ public class Sokkelo : PhysicsGame
     /// <param name="ase"></param>
 
 
-    public void TorniAmpuu(IGameObject kohde, AssaultRifle ase)
+    public void TorniAmpuu(List<Virus> kohteet, AssaultRifle ase)
     {
+        if (kohteet.Count == 0) return;
+        Virus kohde = HeikoinLenkki(kohteet);
         Vector suunta = (kohde.Position - ase.Position).Normalize();
         ase.Angle = suunta.Angle;
+        // PhysicsObject pallo = new PhysicsObject(10, 10);
+        // pallo.Position = ase.Position;
+        // this.Add(pallo); // testattiin aseen paikkaa
         // ase.Angle = (kohde.Position - ase.Position).Angle;
         PhysicsObject ammus = ase.Shoot();
+        if (ammus != null)
+            ammus.IgnoresCollisionResponse = true;
     }
 
+    public Virus HeikoinLenkki(List<Virus> kohteet)
+    {
+        for (int i = 0; i < kohteet.Count; i++)
+            if (kohteet[i].Elamat )
+    }
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
