@@ -9,7 +9,7 @@ using Jypeli.Widgets;
 /// @version 18.10.2020
 /// @version 27.10.2020 Muokattu Taso1 vektorit. Arvon palautus ei toimi. Lisätty virukselle tuhoutumispiste oikeaan seinään ja testattu.
 /// @version 19.11.2020 Torni ampuu nyt oikein. Poistettu tornin aivot ja ratkaistu ongelma poistamalla PhysicsObject ja laitettu tilalle AssaultRifle.
-/// Seuraavaksi pitää laittaa torni ennakoimaan virusten liikettä ja korjata OstaTykki-aliohjelma.
+/// TODO: Seuraavaksi pitää laittaa torni ennakoimaan virusten liikettä ja korjata OstaTykki-aliohjelma.
 /// <summary>
 /// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
 /// </summary>
@@ -266,13 +266,13 @@ public class Sokkelo : PhysicsGame
 
     void AsetaOhjaimet()
     {
-        Mouse.Listen(MouseButton.Left, ButtonState.Down, OstaTykki);
-        Mouse.Listen(MouseButton.Left, ButtonState.Released, OstaTykki);
 
+        Mouse.Listen(MouseButton.Left, ButtonState.Down, OstaTykki, "Osta tykki klikkaamalla tyhjää ruutua.");
+        
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
+       
     }
-    
 
     public void OstaTykki() // korjaa tykkien ostaminen
     {
@@ -390,7 +390,7 @@ public class Sokkelo : PhysicsGame
         PhysicsObject ammus = ase.Shoot();
         if (ammus != null)
             ammus.IgnoresCollisionResponse = true;
-        MessageDisplay.Add(kohde.Position.ToString());
+        // MessageDisplay.Add(kohde.Position.ToString());
     }
 
     public Virus HeikoinLenkki(List<Virus> kohteet)
