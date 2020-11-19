@@ -8,6 +8,8 @@ using Jypeli.Widgets;
 /// @author Jesse Korolainen & Teemu Nieminen
 /// @version 18.10.2020
 /// @version 27.10.2020 Muokattu Taso1 vektorit. Arvon palautus ei toimi. Lisätty virukselle tuhoutumispiste oikeaan seinään ja testattu.
+/// @version 19.11.2020 Torni ampuu nyt oikein. Poistettu tornin aivot ja ratkaistu ongelma poistamalla PhysicsObject ja laitettu tilalle AssaultRifle.
+/// Seuraavaksi pitää laittaa torni ennakoimaan virusten liikettä ja korjata OstaTykki-aliohjelma.
 /// <summary>
 /// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
 /// </summary>
@@ -31,8 +33,9 @@ public class Sokkelo : PhysicsGame
     {
         LuoKentta();
         LuoAivot();
+        AsetaOhjaimet();
         // LuoVirus(); PathWandererBrain
-        LuoTykkitorni(30, 30, new AssaultRifle(80, 40), new Vector(0, 100));
+        LuoTykkitorni(new AssaultRifle(80, 40), new Vector(0, 100)); //Tällä voi säätää aseen kokoa ja sijaintia.
         Timer ajastin = new Timer();
         ajastin.Interval = 1.5;
         ajastin.Timeout += delegate { PolkuaivoVirus(); };
@@ -261,6 +264,16 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    void AsetaOhjaimet()
+    {
+        Mouse.Listen(MouseButton.Left, ButtonState.Down, OstaTykki);
+        Mouse.Listen(MouseButton.Left, ButtonState.Released, OstaTykki);
+
+        Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
+        Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
+    }
+    
+
     public void OstaTykki() // korjaa tykkien ostaminen
     {
         if (rahaLaskuri.Value < 5) return;
@@ -270,7 +283,7 @@ public class Sokkelo : PhysicsGame
             if (olio.Tag.ToString() != "tyhjä ruutu") return; // declare "tyhjä ruutu" myöhemmin, kun luodaan kenttä
 
             AssaultRifle ase = new AssaultRifle(5, 5);
-            LuoTykkitorni(30, 30, ase, olio.Position);
+            LuoTykkitorni(ase, olio.Position);
             rahaLaskuri.AddValue(-5);
             olio.Tag = "käytetty ruutu";
         }
@@ -296,7 +309,7 @@ public class Sokkelo : PhysicsGame
 
         polkuAivot.Loop = false;
 
-        polkuAivot.Speed = 200;
+        polkuAivot.Speed = 150;
 
         virus.Brain = polkuAivot;
 
@@ -315,13 +328,13 @@ public class Sokkelo : PhysicsGame
     /// <param name="korkeus"></param>
     /// <param name="ase"></param>
     /// <returns></returns>
-    public Torni LuoTykkitorni(double leveys, double korkeus, AssaultRifle ase, Vector sijainti)
+    public AssaultRifle LuoTykkitorni(AssaultRifle ase, Vector sijainti)
     {
 
-        Torni tykkitorni = new Torni(leveys, korkeus, ase);
-        tykkitorni.Shape = Shape.Circle;
-        tykkitorni.Position = sijainti;
-        tykkitorni.Color = Color.Transparent;
+        // Torni tykkitorni = new Torni(leveys, korkeus, ase);
+        // tykkitorni.Shape = Shape.Circle;
+        // tykkitorni.Position = sijainti;
+        // tykkitorni.Color = Color.Transparent;
 
         // FollowerBrain torninAivot = new FollowerBrain(virukset);
         // torninAivot.Speed = 0;
@@ -335,7 +348,7 @@ public class Sokkelo : PhysicsGame
         ajastin.Interval = 1.0;
         ajastin.Timeout += delegate { TorniAmpuu(virukset, ase); };
         ajastin.Start();
-        ase.Position = tykkitorni.Position;
+        ase.Position = sijainti;
         ase.ProjectileCollision = AmmusOsui;
         ase.InfiniteAmmo = true;
         ase.Power.DefaultValue = 100;
@@ -347,13 +360,13 @@ public class Sokkelo : PhysicsGame
         Image torninKuva = LoadImage("turret1");
         ase.Image = torninKuva;
 
-        tykkitorni.Add(ase);
+        Add(ase);
 
         // tykkitorni.Brain = torninAivot;
 
-        Add(tykkitorni);
+        // Add(tykkitorni);
 
-        return tykkitorni;
+        return ase;
     }
 
 
@@ -368,12 +381,12 @@ public class Sokkelo : PhysicsGame
     {
         if (kohteet.Count == 0) return;
         Virus kohde = HeikoinLenkki(kohteet);
-        Vector suunta = (kohde.Position - ase.Position).Normalize();
+        Vector suunta = (kohde.Position - ase.AbsolutePosition).Normalize();
         ase.Angle = suunta.Angle;
-        // PhysicsObject pallo = new PhysicsObject(10, 10);
-        // pallo.Position = ase.Position;
-        // this.Add(pallo); // testattiin aseen paikkaa
-        // ase.Angle = (kohde.Position - ase.Position).Angle;
+        PhysicsObject pallo = new PhysicsObject(10, 10);
+        pallo.Position = ase.Position;
+        this.Add(pallo); // testattiin aseen paikkaa
+        ase.Angle = (kohde.Position - ase.Position).Angle;
         PhysicsObject ammus = ase.Shoot();
         if (ammus != null)
             ammus.IgnoresCollisionResponse = true;
@@ -508,7 +521,8 @@ public class Virus : PhysicsObject
 /// <summary>
 /// Tykkitornin tiedot muille aliohjelmille.
 /// </summary>
-public class Torni : PhysicsObject
+/*
+public class Torni : AssaultRifle
 {
     public AssaultRifle torninAse;
     public Torni(double leveys, double korkeus, AssaultRifle ase)
@@ -517,6 +531,7 @@ public class Torni : PhysicsObject
         torninAse = ase;
     }
 }
+*/
 /// <summary>
 /// Luodaan koordinaatti-luokka.
 /// </summary>
