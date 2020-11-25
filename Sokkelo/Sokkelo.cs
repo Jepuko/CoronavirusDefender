@@ -35,15 +35,22 @@ public class Sokkelo : PhysicsGame
 
     public override void Begin()
     {
+        ClearAll();
+        polku.Clear();
+        koordinaatit.Clear();
+        virukset.Clear();
+        aloitusRahat = 10;
+        pelaajanElama = 1;
+        tappoLaskuri = null;
+        rahaLaskuri = null;
+        MultiSelectWindow valikko = new MultiSelectWindow("Tervetuloa peliin", "Aloita peli", "Lopeta");
+        valikko.ItemSelected += PainettiinValikonNappia;
+        Add(valikko);
         LuoKentta();
         LuoAivot();
         AsetaOhjaimet();
         // LuoVirus(); PathWandererBrain
         //LuoTykkitorni(new AssaultRifle(80, 40), new Vector(0, 100)); //Tällä voi säätää aseen kokoa ja sijaintia.
-        Timer ajastin = new Timer();
-        ajastin.Interval = 1.5;
-        ajastin.Timeout += delegate { PolkuaivoVirus(); };
-        ajastin.Start();
         // OstaTykki(new Vector(OstaTykki)); 
         Mouse.IsCursorVisible = true;
         // Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta Tykki");
@@ -51,7 +58,22 @@ public class Sokkelo : PhysicsGame
         LuoRahaLaskuri();
         LuoTappoLaskuri();
     }
-
+    void PainettiinValikonNappia(int valinta)
+    {
+        switch (valinta)
+        {
+            case 0:
+                // AloitaPeli();
+                Timer ajastin = new Timer();
+                ajastin.Interval = 1.5;
+                ajastin.Timeout += delegate { PolkuaivoVirus(); };
+                ajastin.Start();
+                break;
+            case 2:
+                Exit();
+                break;
+        }
+    }
     public void LuoKentta()
     {
         TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
@@ -476,6 +498,7 @@ public class Sokkelo : PhysicsGame
                 // rajahdys.Image = rajahdysKuva;
                 // rajahdys.Sound = rajahdysAani;
                 Add(rajahdys);
+                Timer.SingleShot(10.0, Begin);
             }
         }
         
