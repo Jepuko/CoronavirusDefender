@@ -288,6 +288,7 @@ public class Sokkelo : PhysicsGame
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
         // Keyboard.Listen(Key.Enter, ButtonState.Pressed, MultiSelectWindow, "Lopeta peli");
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
+
     }
 
     public void OstaTykki() 
