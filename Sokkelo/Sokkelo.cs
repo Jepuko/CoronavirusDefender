@@ -11,6 +11,7 @@ using Jypeli.Widgets;
 /// @version 19.11.2020 Torni ampuu nyt oikein. Poistettu tornin aivot ja ratkaistu ongelma poistamalla PhysicsObject ja laitettu tilalle AssaultRifle.
 /// TODO: Seuraavaksi pitää laittaa torni ennakoimaan virusten liikettä ja korjata OstaTykki-aliohjelma.
 /// @version 20.11.2020 Tornin ennakointi ja OstaTykki-aliohjelma korjattu.
+/// TODO: Lisää torneille maksimiampumismatka.
 /// <summary>
 /// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
 /// </summary>
@@ -29,7 +30,7 @@ public class Sokkelo : PhysicsGame
     private List<Vector> polku = new List<Vector>();
     private List<Virus> virukset = new List<Virus>();
     private IntMeter tappoLaskuri;
-    private IntMeter pelaajanElama;
+    private int pelaajanElama = 1;
 
 
     public override void Begin()
@@ -283,8 +284,9 @@ public class Sokkelo : PhysicsGame
     {
         Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta tykki klikkaamalla tyhjää ruutua.");
 
-        PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
+        // PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
+        // Keyboard.Listen(Key.Enter, ButtonState.Pressed, MultiSelectWindow, "Lopeta peli");
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
     }
 
@@ -304,7 +306,7 @@ public class Sokkelo : PhysicsGame
 
     public PhysicsObject PolkuaivoVirus()
     {
-        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 3 + tappoLaskuri.Value / 10);
+        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 3 + tappoLaskuri.Value / 5);
         virus.Position = alku;
         virus.CollisionIgnoreGroup = 1;
         virus.IgnoresCollisionResponse = true;
@@ -315,7 +317,6 @@ public class Sokkelo : PhysicsGame
         virukset.Add(virus);
         Add(virus);
 
-        
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
         polkuAivot.Path = polku;
         polkuAivot.Loop = false;
@@ -392,7 +393,6 @@ public class Sokkelo : PhysicsGame
         PhysicsObject ammus = ase.Shoot();
         if (ammus != null)
             ammus.IgnoresCollisionResponse = true;
-       
     }
 
     public Virus HeikoinLenkki(List<Virus> kohteet)
@@ -465,6 +465,17 @@ public class Sokkelo : PhysicsGame
         {
             virus.Destroy();
             virukset.Remove((Virus)virus);
+            pelaajanElama--;
+            if (pelaajanElama == 0)
+            {
+                Label tekstikentta = new Label("Koronavirus! Karanteeniin siitä! Selvisit " + tappoLaskuri + " päivää ilman koronaa. ");
+                tekstikentta.Color = Color.White;
+                Add(tekstikentta);
+                Explosion rajahdys = new Explosion(5000);
+                // rajahdys.Image = rajahdysKuva;
+                // rajahdys.Sound = rajahdysAani;
+                Add(rajahdys);
+            }
         }
         
         // pelaaja.elamaLaskuri =- 1;
@@ -516,7 +527,6 @@ public class Virus : PhysicsObject
         : base(leveys, korkeus)
     {
         Elamat = elamia;
-        MessageDisplay.Add(elamia.ToString());
     }
 }
 
