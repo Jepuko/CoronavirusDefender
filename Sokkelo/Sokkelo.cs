@@ -18,7 +18,6 @@ public class Sokkelo : PhysicsGame
 {
 
     private PhysicsObject oikeaReuna;
-    private IntMeter ElamaLaskuri;
     // private Vector[] Taso1;
    // private AssaultRifle torninAse = new AssaultRifle(50, 100);
     private int aloitusRahat = 10;
@@ -29,6 +28,8 @@ public class Sokkelo : PhysicsGame
     private Vector alku;
     private List<Vector> polku = new List<Vector>();
     private List<Virus> virukset = new List<Virus>();
+    private IntMeter tappoLaskuri;
+    private IntMeter pelaajanElama;
 
 
     public override void Begin()
@@ -47,6 +48,7 @@ public class Sokkelo : PhysicsGame
         // Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta Tykki");
         // LuoTaso1();
         LuoRahaLaskuri();
+        LuoTappoLaskuri();
     }
 
     public void LuoKentta()
@@ -261,6 +263,21 @@ public class Sokkelo : PhysicsGame
         Add(rahaNaytto);
     }
 
+    public void LuoTappoLaskuri()
+
+    {
+        tappoLaskuri = new IntMeter(0);
+
+        Label tappoNaytto = new Label();
+        tappoNaytto.X = Screen.Right - 100;
+        tappoNaytto.Y = Screen.Top - 100;
+        tappoNaytto.TextColor = Color.Black;
+        tappoNaytto.Color = Color.White;
+
+        tappoNaytto.BindTo(tappoLaskuri);
+        tappoLaskuri.Value = 0;
+        Add(tappoNaytto);
+    }
 
     void AsetaOhjaimet()
     {
@@ -271,7 +288,7 @@ public class Sokkelo : PhysicsGame
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
     }
 
-    public void OstaTykki() // korjaa tykkien ostaminen
+    public void OstaTykki() 
     {
         if (rahaLaskuri.Value < 5) return;
         Vector sijainti = Mouse.PositionOnWorld;
@@ -287,7 +304,7 @@ public class Sokkelo : PhysicsGame
 
     public PhysicsObject PolkuaivoVirus()
     {
-        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 3);
+        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 3 + tappoLaskuri.Value / 10);
         virus.Position = alku;
         virus.CollisionIgnoreGroup = 1;
         virus.IgnoresCollisionResponse = true;
@@ -298,6 +315,7 @@ public class Sokkelo : PhysicsGame
         virukset.Add(virus);
         Add(virus);
 
+        
         PathFollowerBrain polkuAivot = new PathFollowerBrain();
         polkuAivot.Path = polku;
         polkuAivot.Loop = false;
@@ -374,7 +392,7 @@ public class Sokkelo : PhysicsGame
         PhysicsObject ammus = ase.Shoot();
         if (ammus != null)
             ammus.IgnoresCollisionResponse = true;
-        // MessageDisplay.Add(kohde.Position.ToString());
+       
     }
 
     public Virus HeikoinLenkki(List<Virus> kohteet)
@@ -403,6 +421,7 @@ public class Sokkelo : PhysicsGame
                 rahaLaskuri.AddValue(1);
                 kohde.Destroy();
                 virukset.Remove((Virus)kohde);
+                tappoLaskuri.Value++;
             }
         }
     }
@@ -475,7 +494,7 @@ public void LuoTaso1()
 }
 */
 
-
+/*
 public class Pelaaja : PhysicsObject
 {
     private IntMeter elamaLaskuri = new IntMeter(3, 0, 3);
@@ -487,7 +506,7 @@ public class Pelaaja : PhysicsObject
         elamaLaskuri.LowerLimit += delegate { this.Destroy(); };
     }
 }
-
+*/
 
 public class Virus : PhysicsObject
 {
@@ -497,6 +516,7 @@ public class Virus : PhysicsObject
         : base(leveys, korkeus)
     {
         Elamat = elamia;
+        MessageDisplay.Add(elamia.ToString());
     }
 }
 
