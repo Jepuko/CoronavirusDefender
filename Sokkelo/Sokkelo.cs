@@ -69,7 +69,7 @@ public class Sokkelo : PhysicsGame
                 ajastin.Timeout += delegate { PolkuaivoVirus(); };
                 ajastin.Start();
                 break;
-            case 2:
+            case 1:
                 Exit();
                 break;
         }
@@ -410,7 +410,8 @@ public class Sokkelo : PhysicsGame
     public void TorniAmpuu(List<Virus> kohteet, AssaultRifle ase)
     {
         if (kohteet.Count == 0) return;
-        Virus kohde = HeikoinLenkki(kohteet);
+        Virus kohde = HeikoinLenkki(kohteet, ase.Position);
+        if (kohde == null) return;
         Vector suunta = (kohde.Position + (kohde.Velocity * (Vector.Distance(kohde.Position, ase.Position) / 500)) - ase.AbsolutePosition).Normalize();
         ase.Angle = suunta.Angle;
         PhysicsObject ammus = ase.Shoot();
@@ -418,12 +419,16 @@ public class Sokkelo : PhysicsGame
             ammus.IgnoresCollisionResponse = true;
     }
 
-    public Virus HeikoinLenkki(List<Virus> kohteet)
+    public Virus HeikoinLenkki(List<Virus> kohteet, Vector sijainti)
     {
-        int heikoin = int.MaxValue;
+        int heikoin = -1;
         for (int i = 0; i < kohteet.Count; i++)
-            if (kohteet[i].Elamat <= heikoin)
+            if ((heikoin == -1 || kohteet[i].Elamat <= kohteet[heikoin].Elamat) && Vector.Distance(sijainti, kohteet[i].Position) < 500)
                 heikoin = i;
+        if (heikoin == -1)
+        { 
+            return null;
+        }
         return kohteet[heikoin];
     }
 
@@ -498,7 +503,7 @@ public class Sokkelo : PhysicsGame
                 // rajahdys.Image = rajahdysKuva;
                 // rajahdys.Sound = rajahdysAani;
                 Add(rajahdys);
-                Timer.SingleShot(10.0, Begin);
+                Timer.SingleShot(7.0, Begin);
             }
         }
         
