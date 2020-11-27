@@ -183,18 +183,18 @@ public class Sokkelo : PhysicsGame
         Label rahaNaytto = new Label();
         rahaNaytto.X = Screen.Left + 150;
         rahaNaytto.Y = Screen.Top - 25;
-        rahaNaytto.TextColor = Color.Black;
-        rahaNaytto.Color = Color.White;
+        rahaNaytto.TextColor = Color.White;
+        rahaNaytto.Color = Color.Transparent;
 
         rahaNaytto.BindTo(rahaLaskuri);
         rahaLaskuri.Value = aloitusRahat;
         Add(rahaNaytto);
 
         Label rahat = new Label("Rahat");
-       rahat.X = rahaNaytto.X;
-       rahat.Y = rahaNaytto.Y - 25;
-       rahat.TextColor = Color.Black;
-        rahat.Color = Color.White;
+        rahat.X = rahaNaytto.X;
+        rahat.Y = rahaNaytto.Y - 25;
+        rahat.TextColor = Color.White;
+        rahat.Color = Color.Transparent;
         Add(rahat);
     }
 
@@ -206,8 +206,8 @@ public class Sokkelo : PhysicsGame
         Label tappoNaytto = new Label();
         tappoNaytto.X = Screen.Right - 150;
         tappoNaytto.Y = Screen.Top - 25;
-        tappoNaytto.TextColor = Color.Black;
-        tappoNaytto.Color = Color.White;
+        tappoNaytto.TextColor = Color.White;
+        tappoNaytto.Color = Color.Transparent;
 
         tappoNaytto.BindTo(tappoLaskuri);
         tappoLaskuri.Value = 0;
@@ -216,8 +216,8 @@ public class Sokkelo : PhysicsGame
         Label paivaLaskuri = new Label("Päivää ilman koronaa");
         paivaLaskuri.X = tappoNaytto.X;
         paivaLaskuri.Y = tappoNaytto.Y - 25;
-        paivaLaskuri.TextColor = Color.Black;
-        paivaLaskuri.Color = Color.White;
+        paivaLaskuri.TextColor = Color.White;
+        paivaLaskuri.Color = Color.Transparent;
         Add(paivaLaskuri);
     }
 
@@ -363,8 +363,9 @@ public class Sokkelo : PhysicsGame
             pelaajanElama--;
             if (pelaajanElama == 0)
             {
-                Label tekstikentta = new Label("Koronavirus! Karanteeniin siitä! Selvisit " + tappoLaskuri + " päivää ilman koronaa. ");
-                tekstikentta.Color = Color.White;
+                Label tekstikentta = new Label("Koronavirus! Karanteeniin siitä! Selvisit " + tappoLaskuri + " päivää ilman koronaa.");
+                tekstikentta.Color = Color.Transparent;
+                tekstikentta.TextColor = Color.Black;
                 Add(tekstikentta);
                 Explosion rajahdys = new Explosion(5000);
                 SoundEffect rajahdysAani = LoadSoundEffect(RandomGen.SelectOne<string>("lepakkokeitto", "nuha", "koronaviirus"));
