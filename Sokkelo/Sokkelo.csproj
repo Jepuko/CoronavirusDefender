@@ -19,6 +19,18 @@
       <None Update="Content\korona.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Content\korona1.mp3">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\koronaviirus.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\lepakkokeitto.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\nuha.wav">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Content\polku.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

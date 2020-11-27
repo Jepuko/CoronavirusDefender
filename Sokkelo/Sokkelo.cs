@@ -353,8 +353,15 @@ public class Sokkelo : PhysicsGame
                 tekstikentta.Color = Color.White;
                 Add(tekstikentta);
                 Explosion rajahdys = new Explosion(5000);
-                // rajahdys.Image = rajahdysKuva;
-                // rajahdys.Sound = rajahdysAani;
+
+                /*
+                List<String> aaniLista = new List<String>();
+                aaniLista.Add("nuha");
+                aaniLista.Add("lepakkokeitto");
+                aaniLista.Add("koronaviirus");
+                */
+                SoundEffect rajahdysAani = LoadSoundEffect(RandomGen.SelectOne<string>("lepakkokeitto", "nuha", "koronaviirus"));
+                rajahdys.Sound = rajahdysAani;
                 Add(rajahdys);
                 Timer.SingleShot(7.0, Begin);
             }
