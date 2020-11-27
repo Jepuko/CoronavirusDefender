@@ -17,10 +17,7 @@ using Jypeli.Widgets;
 /// </summary>
 public class Sokkelo : PhysicsGame
 {
-
     private PhysicsObject oikeaReuna;
-    // private Vector[] Taso1;
-   // private AssaultRifle torninAse = new AssaultRifle(50, 100);
     private int aloitusRahat = 10;
     private IntMeter rahaLaskuri;
     const int ruudunLeveys = 50;
@@ -49,21 +46,17 @@ public class Sokkelo : PhysicsGame
         LuoKentta();
         LuoAivot();
         AsetaOhjaimet();
-        // LuoVirus(); PathWandererBrain
-        //LuoTykkitorni(new AssaultRifle(80, 40), new Vector(0, 100)); //Tällä voi säätää aseen kokoa ja sijaintia.
-        // OstaTykki(new Vector(OstaTykki)); 
         Mouse.IsCursorVisible = true;
-        // Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta Tykki");
-        // LuoTaso1();
         LuoRahaLaskuri();
         LuoTappoLaskuri();
     }
+
+
     void PainettiinValikonNappia(int valinta)
     {
         switch (valinta)
         {
             case 0:
-                // AloitaPeli();
                 Timer ajastin = new Timer();
                 ajastin.Interval = 1.5;
                 ajastin.Timeout += delegate { PolkuaivoVirus(); };
@@ -74,16 +67,11 @@ public class Sokkelo : PhysicsGame
                 break;
         }
     }
+
+
     public void LuoKentta()
     {
         TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
-        // ruudut.SetTileMethod('=', LuoYlareuna);
-        // ruudut.SetTileMethod('a', LuoAlareuna);
-        // ruudut.SetTileMethod('o', LuoOikeareuna);
-        // ruudut.SetTileMethod('v', LuoVasenreuna);
-        // ruudut.SetTileMethod('>', LuoOikea);
-        // ruudut.SetTileMethod('V', LuoAlas);
-        // ruudut.SetTileMethod('^', LuoYlos);
         ruudut.SetTileMethod('A', LuoAlku);
         ruudut.SetTileMethod('#', LuoPolku);
         ruudut.SetTileMethod('.', LuoRuutu);
@@ -104,8 +92,6 @@ public class Sokkelo : PhysicsGame
         oikeaReuna.Tag = "maali";
         Image taustaKuva = LoadImage("taustakuva");
         Level.Background.Image = taustaKuva;
-
-        // muuta lista taulukoksi -> taulukko PolkuAivovirukselle
     }
 
 
@@ -139,9 +125,6 @@ public class Sokkelo : PhysicsGame
         polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        // koordinaatit.Add(sijainti);
         Koordinaatti koordinaatti = new Koordinaatti(jarjestysnumero, sijainti);
         koordinaatit.Add(koordinaatti);
         polku.Tag = "maali";
@@ -156,9 +139,6 @@ public class Sokkelo : PhysicsGame
         polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        // koordinaatit.Add(sijainti);
         Koordinaatti koordinaatti = new Koordinaatti(jarjestysnumero, sijainti);
         koordinaatit.Add(koordinaatti);
         polku.Tag = tag;
@@ -166,71 +146,18 @@ public class Sokkelo : PhysicsGame
         Add(polku, -3);
     }
 
-    /*
-    void LuoOikea(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = ">";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void LuoAlas(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "V";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-
-    void LuoYlos(Vector sijainti, double leveys, double korkeus)
-    {
-        PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
-        polku.Shape = Shape.Rectangle;
-        polku.Position = sijainti;
-        Image polunKuva = LoadImage("polku");
-        polku.Image = polunKuva;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        koordinaatit.Add(sijainti);
-        polku.Tag = "^";
-        polku.CollisionIgnoreGroup = 1;
-        Add(polku, -3);
-    }
-    */
- 
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
-        // PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
         PhysicsObject polku = new PhysicsObject(leveys, korkeus);
         polku.Shape = Shape.Rectangle;
         polku.Position = sijainti;
         Image polunKuva = LoadImage("polku");
         polku.Image = polunKuva;
         polku.IgnoresCollisionResponse = true;
-        // polku.CollisionIgnoreGroup = 2;
-        // polku.IgnoresCollisionResponse = true;
-        // Vector korjattuSijainti = new Vector(leveys, korkeus - 200);
-        // koordinaatit.Add(sijainti);
         Add(polku, -3);
     }
-    /// <summary>
-    /// Järjestetään koordinaatit suuruusjärjestykseen ja luodaan näillä aivoille polku.
-    /// </summary>
+
+
     void LuoAivot()
     {
         koordinaatit.Sort(new Comparison<Koordinaatti>(VertaaKoordinaatteja));
@@ -240,6 +167,7 @@ public class Sokkelo : PhysicsGame
         }
     }
 
+
     int VertaaKoordinaatteja(Koordinaatti k1, Koordinaatti k2)
     {
         if (k1.jarjestysnumero > k2.jarjestysnumero) return 1;
@@ -248,30 +176,7 @@ public class Sokkelo : PhysicsGame
     }
 
 
-    /*
-    public void LuoVirus()
-    {
-        PhysicsObject virus = new PhysicsObject(2 * 10.0, 2 * 10.0, Shape.Circle);
-        virus.X = 0.0;
-        virus.Y = 0.0;
-        virus.Color = Color.Red;
-        virus.Restitution = 1.0;
-
-        Add(virus);
-
-        //Kentän yhden "ruudun" koko, käytä samaa lukua kuin jos kenttä luotu esimerkiksi ColorTileMapilla.
-        const int RUUDUN_KOKO = 500;
-
-        LabyrinthWandererBrain labyrinttiAivot = new LabyrinthWandererBrain(RUUDUN_KOKO);
-        labyrinttiAivot.Speed = 100.0;
-        labyrinttiAivot.LabyrinthWallTag = "seina";
-
-        virus.Brain = labyrinttiAivot;
-    }
-    */
-
     public void LuoRahaLaskuri()
-
     {
         rahaLaskuri = new IntMeter(0);
 
@@ -286,8 +191,8 @@ public class Sokkelo : PhysicsGame
         Add(rahaNaytto);
     }
 
-    public void LuoTappoLaskuri()
 
+    public void LuoTappoLaskuri()
     {
         tappoLaskuri = new IntMeter(0);
 
@@ -302,16 +207,14 @@ public class Sokkelo : PhysicsGame
         Add(tappoNaytto);
     }
 
+
     void AsetaOhjaimet()
     {
         Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta tykki klikkaamalla tyhjää ruutua.");
-
-        // PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
-        // Keyboard.Listen(Key.Enter, ButtonState.Pressed, MultiSelectWindow, "Lopeta peli");
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
-
     }
+
 
     public void OstaTykki() 
     {
@@ -329,14 +232,14 @@ public class Sokkelo : PhysicsGame
 
     public PhysicsObject PolkuaivoVirus()
     {
-        Virus virus = new Virus(ruudunKorkeus / 2, ruudunLeveys / 2, 3 + tappoLaskuri.Value / 5);
+        Virus virus = new Virus(ruudunKorkeus / 2 + tappoLaskuri.Value / 5, ruudunLeveys / 2 + tappoLaskuri.Value / 5, 3 + tappoLaskuri.Value / 5);
         virus.Position = alku;
         virus.CollisionIgnoreGroup = 1;
         virus.IgnoresCollisionResponse = true;
         Image viruksenKuva = LoadImage("korona");
         virus.Image = viruksenKuva;
         virus.Restitution = 1.0;
-        virus.Tag = "virus"; // Virukselle luodaan tag.
+        virus.Tag = "virus";
         virukset.Add(virus);
         Add(virus);
 
@@ -360,20 +263,6 @@ public class Sokkelo : PhysicsGame
     /// <returns></returns>
     public AssaultRifle LuoTykkitorni(AssaultRifle ase, Vector sijainti)
     {
-
-        // Torni tykkitorni = new Torni(leveys, korkeus, ase);
-        // tykkitorni.Shape = Shape.Circle;
-        // tykkitorni.Position = sijainti;
-        // tykkitorni.Color = Color.Transparent;
-
-        // FollowerBrain torninAivot = new FollowerBrain(virukset);
-        // torninAivot.Speed = 0;
-        // torninAivot.DistanceClose = 500;
-        // torninAivot.DistanceFar = 1000;
-        // torninAivot.TargetClose += delegate { TorniAmpuu(torninAivot.CurrentTarget, ase); };
-        // torninAivot.DistanceToTarget.AddTrigger(500, TriggerDirection.Down, VirusTormasi);
-        // IGameObject kohde = CurrentTarget.Tag.ToString("virus");
-        // TorniAmpuu(torninAivot.CurrentTarget, ase);
         Timer ajastin = new Timer();
         ajastin.Interval = 1.0;
         ajastin.Timeout += delegate { TorniAmpuu(virukset, ase); };
@@ -389,13 +278,7 @@ public class Sokkelo : PhysicsGame
         ase.AttackSound = null;
         Image torninKuva = LoadImage("turret1");
         ase.Image = torninKuva;
-
         Add(ase);
-
-        // tykkitorni.Brain = torninAivot;
-
-        // Add(tykkitorni);
-
         return ase;
     }
 
@@ -405,8 +288,6 @@ public class Sokkelo : PhysicsGame
    /// </summary>
    /// <param name="kohteet">Mitä ammutaan</param>
    /// <param name="ase">Millä ammutaan</param>
-
-
     public void TorniAmpuu(List<Virus> kohteet, AssaultRifle ase)
     {
         if (kohteet.Count == 0) return;
@@ -419,11 +300,12 @@ public class Sokkelo : PhysicsGame
             ammus.IgnoresCollisionResponse = true;
     }
 
+
     public Virus HeikoinLenkki(List<Virus> kohteet, Vector sijainti)
     {
         int heikoin = -1;
         for (int i = 0; i < kohteet.Count; i++)
-            if ((heikoin == -1 || kohteet[i].Elamat <= kohteet[heikoin].Elamat) && Vector.Distance(sijainti, kohteet[i].Position) < 500)
+            if ((heikoin == -1 || kohteet[i].Elamat <= kohteet[heikoin].Elamat) && Vector.Distance(sijainti, kohteet[i].Position) < 300)
                 heikoin = i;
         if (heikoin == -1)
         { 
@@ -435,10 +317,7 @@ public class Sokkelo : PhysicsGame
 
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
-        // ammus.CollisionIgnoreGroup = 2;
         ammus.IgnoresCollisionResponse = true;
-       // ammus.IgnoresCollisionWith = true;
-
         if (kohde.Tag.ToString() == "virus") 
         {
             Virus virus = (Virus)kohde;
@@ -461,34 +340,8 @@ public class Sokkelo : PhysicsGame
     /// <param name="virus"></param>
     /// <param name="kohde"></param>
     /// 
-
     public void VirusTormasi(PhysicsObject virus, PhysicsObject kohde)
     {
-        /*
-        if (kohde.Tag.ToString() == "alku")
-        {
-            virus.StopMoveTo();
-            virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
-        }
-
-        if (kohde.Tag.ToString() == "V")
-        {
-            virus.StopMoveTo();
-            virus.MoveTo(kohde.Position + new Vector(0, -ruudunKorkeus), 100, null);
-        }
-
-        if (kohde.Tag.ToString() == "^")
-        {
-            virus.StopMoveTo();
-            virus.MoveTo(kohde.Position + new Vector(0, ruudunKorkeus), 100, null);
-        }
-
-        if (kohde.Tag.ToString() == ">")
-        {
-            virus.StopMoveTo();
-            virus.MoveTo(kohde.Position + new Vector(ruudunLeveys, 0), 100, null);
-        }
-        */
         if (kohde.Tag.ToString() == "maali")
         {
             virus.Destroy();
@@ -506,53 +359,15 @@ public class Sokkelo : PhysicsGame
                 Timer.SingleShot(7.0, Begin);
             }
         }
-        
-        // pelaaja.elamaLaskuri =- 1;
-
-        // if (kohde == ) virus
     }
 }
 
-
-
-/*
-/// <summary>
-/// Pelin ensimmäinen taso.
-/// </summary>
-public void LuoTaso1()
-{
-    Taso1 = new Vector[] polku;
-
-    polku= {
-    new Vector(-100, 0);
-    new Vector(-100, 200);
-    new Vector(100, 200);
-    new Vector(100, -250);
-    new Vector(500, -250);
-    };
-
-}
-*/
-
-/*
-public class Pelaaja : PhysicsObject
-{
-    private IntMeter elamaLaskuri = new IntMeter(3, 0, 3);
-    public IntMeter ElamaLaskuri { get { return elamaLaskuri; } }
-
-    public Pelaaja(double leveys, double korkeus)
-        : base(leveys, korkeus)
-    {
-        elamaLaskuri.LowerLimit += delegate { this.Destroy(); };
-    }
-}
-*/
 
 public class Virus : PhysicsObject
 {
     public int Elamat { get; set; }
 
-    public Virus(double leveys, double korkeus, int elamia) // constructor eli muodostaja. luo virustyyppisen olion
+    public Virus(double leveys, double korkeus, int elamia)
         : base(leveys, korkeus)
     {
         Elamat = elamia;
@@ -560,23 +375,6 @@ public class Virus : PhysicsObject
 }
 
 
-/// <summary>
-/// Tykkitornin tiedot muille aliohjelmille.
-/// </summary>
-/*
-public class Torni : AssaultRifle
-{
-    public AssaultRifle torninAse;
-    public Torni(double leveys, double korkeus, AssaultRifle ase)
-        : base(leveys, korkeus)
-    {
-        torninAse = ase;
-    }
-}
-*/
-/// <summary>
-/// Luodaan koordinaatti-luokka.
-/// </summary>
 public class Koordinaatti
 {
     public int jarjestysnumero;
