@@ -181,14 +181,21 @@ public class Sokkelo : PhysicsGame
         rahaLaskuri = new IntMeter(0);
 
         Label rahaNaytto = new Label();
-        rahaNaytto.X = Screen.Left + 100;
-        rahaNaytto.Y = Screen.Top - 100;
+        rahaNaytto.X = Screen.Left + 150;
+        rahaNaytto.Y = Screen.Top - 25;
         rahaNaytto.TextColor = Color.Black;
         rahaNaytto.Color = Color.White;
 
         rahaNaytto.BindTo(rahaLaskuri);
         rahaLaskuri.Value = aloitusRahat;
         Add(rahaNaytto);
+
+        Label rahat = new Label("Rahat");
+       rahat.X = rahaNaytto.X;
+       rahat.Y = rahaNaytto.Y - 25;
+       rahat.TextColor = Color.Black;
+        rahat.Color = Color.White;
+        Add(rahat);
     }
 
 
@@ -197,20 +204,27 @@ public class Sokkelo : PhysicsGame
         tappoLaskuri = new IntMeter(0);
 
         Label tappoNaytto = new Label();
-        tappoNaytto.X = Screen.Right - 100;
-        tappoNaytto.Y = Screen.Top - 100;
+        tappoNaytto.X = Screen.Right - 150;
+        tappoNaytto.Y = Screen.Top - 25;
         tappoNaytto.TextColor = Color.Black;
         tappoNaytto.Color = Color.White;
 
         tappoNaytto.BindTo(tappoLaskuri);
         tappoLaskuri.Value = 0;
         Add(tappoNaytto);
+
+        Label paivaLaskuri = new Label("Päivää ilman koronaa");
+        paivaLaskuri.X = tappoNaytto.X;
+        paivaLaskuri.Y = tappoNaytto.Y - 25;
+        paivaLaskuri.TextColor = Color.Black;
+        paivaLaskuri.Color = Color.White;
+        Add(paivaLaskuri);
     }
 
 
     void AsetaOhjaimet()
     {
-        Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta tykki klikkaamalla tyhjää ruutua.");
+        Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta käsidesiä klikkaamalla tyhjää ruutua. Käsidesi maksaa 5 rahaa.");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
     }
