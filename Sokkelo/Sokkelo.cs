@@ -12,7 +12,11 @@ using Jypeli.Widgets;
 /// @version 20.11.2020 Tornin ennakointi ja OstaTykki-aliohjelma korjattu.
 /// @version 9.12.2020 Koodi siistitty ja homma toimii.
 /// <summary>
-/// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
+/// Peli on tornipuolustustyylinen peli, jossa pelaajan on parannettava jatkuvasti immuunipuolustustaan sanytolilla taistelussa viheliäistä koronavirusta vastaan.
+/// Ohjelma piirtää tekstitiedostosta kartan, jota pitkin syntyvät virukset kulkevat kohti maalia. 
+/// Maaliin päästessään virus tuhoutuu ja tekee vahinkoa pelaajaan. Peli päättyy, kun ihminen sairastuu koronaan eli ei ole enää elämiä jäljellä.
+/// Viruksia tuhotaan asettamalla sanytol-tykkitorneja polun varrelle, jotka automaattisesti ampuvat viruksia.
+/// Kun virus tuhoutuu, pelaaja saa yhden rahan lisää ja virus voimistuu sekä kooltaan että elämiltään. Viidellä rahalla voi ostaa uuden tykkitornin.
 /// </summary>
 public class Sokkelo : PhysicsGame
 {
