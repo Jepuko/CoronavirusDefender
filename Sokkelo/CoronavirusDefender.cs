@@ -18,7 +18,7 @@ using Jypeli.Widgets;
 /// Viruksia tuhotaan asettamalla sanytol-tykkitorneja polun varrelle, jotka automaattisesti ampuvat viruksia.
 /// Kun virus tuhoutuu, pelaaja saa yhden rahan lisää ja virus voimistuu sekä kooltaan että elämiltään. Viidellä rahalla voi ostaa uuden tykkitornin.
 /// </summary>
-public class Sokkelo : PhysicsGame
+public class CoronavirusDefender : PhysicsGame
 {
     private PhysicsObject oikeaReuna;
     private int aloitusRahat = 10;

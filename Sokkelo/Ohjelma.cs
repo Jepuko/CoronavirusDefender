@@ -17,7 +17,7 @@ namespace Program
         [STAThread]
         static void Main()
         {
-            using (var game = new Sokkelo())
+            using (var game = new CoronavirusDefender())
                 game.Run();
         }
     }
