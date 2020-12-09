@@ -52,6 +52,10 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Luodaan alkuvalikko.
+    /// </summary>
+    /// <param name="valinta"></param>
     void PainettiinValikonNappia(int valinta)
     {
         switch (valinta)
@@ -69,6 +73,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Luodaan kenttä, jossa virukset kulkevat.
+    /// </summary>
     public void LuoKentta()
     {
         TileMap ruudut = TileMap.FromLevelAsset("kentta1.txt");
@@ -146,6 +153,7 @@ public class Sokkelo : PhysicsGame
         Add(polku, -3);
     }
 
+
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject polku = new PhysicsObject(leveys, korkeus);
@@ -168,6 +176,12 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Varmistetaan, että polku toimii ja virus osaa mennä oikeaa koordinaattia kohti.
+    /// </summary>
+    /// <param name="k1"></param>
+    /// <param name="k2"></param>
+    /// <returns></returns>
     int VertaaKoordinaatteja(Koordinaatti k1, Koordinaatti k2)
     {
         if (k1.jarjestysnumero > k2.jarjestysnumero) return 1;
@@ -176,6 +190,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Luodaan rahalaskuri.
+    /// </summary>
     public void LuoRahaLaskuri()
     {
         rahaLaskuri = new IntMeter(0);
@@ -199,6 +216,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Luodaan tappolaskuri.
+    /// </summary>
     public void LuoTappoLaskuri()
     {
         tappoLaskuri = new IntMeter(0);
@@ -222,6 +242,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Annetaan pelaajalle ohjaimet.
+    /// </summary>
     void AsetaOhjaimet()
     {
         Mouse.Listen(MouseButton.Left, ButtonState.Pressed, OstaTykki, "Osta käsidesiä klikkaamalla tyhjää ruutua. Käsidesi maksaa 5 rahaa.");
@@ -230,6 +253,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Annetaan pelaajalle mahdollisuus ostaa uusia tykkejä.
+    /// </summary>
     public void OstaTykki() 
     {
         if (rahaLaskuri.Value < 5) return;
@@ -244,6 +270,10 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Luodaan virus ja sille aivot.
+    /// </summary>
+    /// <returns></returns>
     public PhysicsObject PolkuaivoVirus()
     {
         Virus virus = new Virus(ruudunKorkeus / 2 + tappoLaskuri.Value / 5, ruudunLeveys / 2 + tappoLaskuri.Value / 5, 3 + tappoLaskuri.Value / 5);
@@ -315,6 +345,12 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Tykki valitsee aina eniten osumaa saaneen viruksen, max range 300.
+    /// </summary>
+    /// <param name="kohteet"></param>
+    /// <param name="sijainti"></param>
+    /// <returns></returns>
     public Virus HeikoinLenkki(List<Virus> kohteet, Vector sijainti)
     {
         int heikoin = -1;
@@ -329,6 +365,11 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Tuhotaan virukseltä elämä aina, kun ammus osuu siihen ja poistetaan ammus listasta. Mikäli virus tuhoutuu, lisätään rahalaskuriin rahaa.
+    /// </summary>
+    /// <param name="ammus"></param>
+    /// <param name="kohde"></param>
     public void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
         ammus.IgnoresCollisionResponse = true;
@@ -378,8 +419,14 @@ public class Sokkelo : PhysicsGame
 }
 
 
+/// <summary>
+/// Viruksen luokka.
+/// </summary>
 public class Virus : PhysicsObject
 {
+    /// <summary>
+    /// Viruksen hp.
+    /// </summary>
     public int Elamat { get; set; }
 
     public Virus(double leveys, double korkeus, int elamia)
@@ -390,9 +437,18 @@ public class Virus : PhysicsObject
 }
 
 
+/// <summary>
+/// Kentän koordinaatit.
+/// </summary>
 public class Koordinaatti
 {
+    /// <summary>
+    /// Järjestysnumero kertoo virukselle, että mihin koordinaattiin sen pitää seuraavaksi mennä.
+    /// </summary>
     public int jarjestysnumero;
+    /// <summary>
+    /// Missä virus on.
+    /// </summary>
     public Vector sijainti;
     public Koordinaatti(int jarjestysnumero, Vector sijainti)
     {
