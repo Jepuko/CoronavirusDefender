@@ -6,11 +6,7 @@ using Jypeli.Controls;
 using Jypeli.Widgets;
 
 /// @author Jesse Korolainen & Teemu Nieminen
-/// @version 18.10.2020
-/// @version 27.10.2020 Muokattu Taso1 vektorit. Arvon palautus ei toimi. Lisätty virukselle tuhoutumispiste oikeaan seinään ja testattu.
-/// @version 19.11.2020 Torni ampuu nyt oikein. Poistettu tornin aivot ja ratkaistu ongelma poistamalla PhysicsObject ja laitettu tilalle AssaultRifle.
-/// @version 20.11.2020 Tornin ennakointi ja OstaTykki-aliohjelma korjattu.
-/// @version 9.12.2020 Koodi siistitty ja homma toimii.
+/// @version 9.12.2020 PC-versio 1.0.
 /// <summary>
 /// Peli on tornipuolustustyylinen peli, jossa pelaajan on parannettava jatkuvasti immuunipuolustustaan sanytolilla taistelussa viheliäistä koronavirusta vastaan.
 /// Ohjelma piirtää tekstitiedostosta kartan, jota pitkin syntyvät virukset kulkevat kohti maalia. 
@@ -91,10 +87,6 @@ public class CoronavirusDefender : PhysicsGame
         ruudut.SetTileMethod('M', LuoMaali, 9);
         ruudut.SetTileMethod('B', LuoKoordinaatti, 1, "B");
         ruudut.SetTileMethod('C', LuoKoordinaatti, 2, "C");
-        ruudut.SetTileMethod('D', LuoKoordinaatti, 3, "D");
-        ruudut.SetTileMethod('E', LuoKoordinaatti, 4, "E");
-        ruudut.SetTileMethod('F', LuoKoordinaatti, 5, "F");
-        ruudut.SetTileMethod('G', LuoKoordinaatti, 6, "G");
         ruudut.SetTileMethod('H', LuoKoordinaatti, 7, "H");
         ruudut.SetTileMethod('I', LuoKoordinaatti, 8, "I");
 
