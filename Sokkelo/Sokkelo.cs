@@ -9,9 +9,8 @@ using Jypeli.Widgets;
 /// @version 18.10.2020
 /// @version 27.10.2020 Muokattu Taso1 vektorit. Arvon palautus ei toimi. Lisätty virukselle tuhoutumispiste oikeaan seinään ja testattu.
 /// @version 19.11.2020 Torni ampuu nyt oikein. Poistettu tornin aivot ja ratkaistu ongelma poistamalla PhysicsObject ja laitettu tilalle AssaultRifle.
-/// TODO: Seuraavaksi pitää laittaa torni ennakoimaan virusten liikettä ja korjata OstaTykki-aliohjelma.
 /// @version 20.11.2020 Tornin ennakointi ja OstaTykki-aliohjelma korjattu.
-/// TODO: Lisää torneille maksimiampumismatka.
+/// @version 9.12.2020 Koodi siistitty ja homma toimii.
 /// <summary>
 /// Luodaan tietyt koordinaatit, mitä pitkin fysiikkaobjekti pääsee etenemään. 
 /// </summary>
@@ -105,6 +104,12 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Paikka, johon uusi virus syntyy.
+    /// </summary>
+    /// <param name="sijainti"></param>
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
     void LuoAlku(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject ruutu = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -117,6 +122,12 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Tyhjä ruutu, johon voi luoda tykkitorneja.
+    /// </summary>
+    /// <param name="sijainti"></param>
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
     void LuoRuutu(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject ruutu = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -128,6 +139,13 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Maali, johon virus yrittää mennä.
+    /// </summary>
+    /// <param name="sijainti"></param>
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
+    /// <param name="jarjestysnumero"></param>
     void LuoMaali(Vector sijainti, double leveys, double korkeus, int jarjestysnumero)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -142,6 +160,14 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Viruksen polulle koordinaatit.
+    /// </summary>
+    /// <param name="sijainti"></param>
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
+    /// <param name="jarjestysnumero"></param>
+    /// <param name="tag"></param>
     void LuoKoordinaatti(Vector sijainti, double leveys, double korkeus, int jarjestysnumero, string tag)
     {
         PhysicsObject polku = PhysicsObject.CreateStaticObject(leveys, korkeus);
@@ -157,6 +183,12 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Erilaiset grafiikat polulle. Ei vaikuta viruksen liikkeisiin, eikä tykkitornia voi asettaa polulle.
+    /// </summary>
+    /// <param name="sijainti"></param>
+    /// <param name="leveys"></param>
+    /// <param name="korkeus"></param>
     void LuoPolku(Vector sijainti, double leveys, double korkeus)
     {
         PhysicsObject polku = new PhysicsObject(leveys, korkeus);
@@ -169,6 +201,9 @@ public class Sokkelo : PhysicsGame
     }
 
 
+    /// <summary>
+    /// Käy läpi koordinaattien järjestyksen.
+    /// </summary>
     void LuoAivot()
     {
         koordinaatit.Sort(new Comparison<Koordinaatti>(VertaaKoordinaatteja));
