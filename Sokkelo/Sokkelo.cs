@@ -27,6 +27,9 @@ public class Sokkelo : PhysicsGame
     private List<Vector> polku = new List<Vector>();
     private List<Virus> virukset = new List<Virus>();
     private IntMeter tappoLaskuri;
+    /// <summary>
+    /// Pelaajan hp. Yksi virus tekee 1 vahinkoa osuessaan maaliin.
+    /// </summary>
     private int pelaajanElama = 1;
 
 
